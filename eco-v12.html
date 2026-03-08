@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生活权益卡 V1.2 全景生态图解</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 350px;
+    max-height: 400px;
+}
+@media (min-width: 768px) {
+    .chart-container { height: 400px; }
+}
+.flow-arrow-down::after { content: '↓'; display: block; text-align: center; font-size: 2rem; color: #cbd5e1; margin: 0.5rem 0; }
+@media (min-width: 768px) { 
+    .flow-arrow-right::after { content: '→'; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #cbd5e1; height: 100%; padding: 0 1rem; }
+    .flow-arrow-down::after { display: none; }
+}
+body { background-color: #f8fafc; }
+</style>
+<!-- Chosen Palette: Energetic & Playful (Blue #2563EB, Orange #F97316, Green #10B981, Dark Slate #1E293B) -->
+<!-- Application Structure Plan: The SPA infographic is structured sequentially to follow the lifecycle of the "Life Privilege Card". It begins with the core value proposition (Discounts), moves to the Merchant Execution workflow (SOP), transitions into the User Feedback mechanism, and concludes with printing/implementation guidelines. This layout transforms a dry specification document into a compelling visual narrative, making the ecosystem easy to understand for all stakeholders. -->
+<!-- Visualization & Content Choices: 
+1. Discount Depth -> Goal: Compare -> Viz: Bar Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: Clearly contrasts the different discount values across categories. NO SVG.
+2. Merchant SOP -> Goal: Organize/Process -> Viz: CSS Flexbox Flowchart -> Interaction: None (static flow) -> Justification: Breaks down operational friction into simple, sequential steps. NO SVG/Mermaid.
+3. Feedback Scoring -> Goal: Inform/Composition -> Viz: Donut Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: Visualizes how the 4 distinct criteria make up a perfect 100% (4-point) score. NO SVG. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="text-slate-800 font-sans antialiased">
+
+<div class="max-w-5xl mx-auto bg-white shadow-xl min-h-screen">
+    
+    <header class="bg-blue-600 text-white p-8 md:p-12 border-b-8 border-orange-500">
+        <div class="flex flex-col items-center text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">生活权益卡 V1.2 生态图解</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-2xl">从商户落地的执行口径到用户监督的闭环反馈，一图读懂权益生态运作指南与物料制作规范。</p>
+        </div>
+    </header>
+
+    <main class="p-6 md:p-12 space-y-16">
+
+        <section id="discounts">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span class="text-blue-600 mr-3">💰</span> 核心价值：权益让利图谱
+                </h2>
+                <p class="text-slate-600 text-lg leading-relaxed">
+                    本区域展示了当前权益卡覆盖的三大核心生活服务品类及其对应的折扣力度。通过直观的柱状图，您可以清晰看到不同品类为用户带来的实际优惠比例（折扣深度）。这些确定的折扣是整个生态运转的基石。
+                </p>
+            </div>
+
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="mb-4 text-center">
+                    <h3 class="text-xl font-bold text-slate-700">各品类折扣深度对比 (%)</h3>
+                    <p class="text-sm text-slate-500">数值越高代表用户节省的比例越大</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="discountChart"></canvas>
+                </div>
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100 text-sm text-blue-800">
+                    <strong>💡 计价提示：</strong> 建议商户在最终核算时，将折后价<strong>向下取整至“元”</strong>。这不仅能提升收银效率，还能有效减少因零钱产生的用户争议。
+                </div>
+            </div>
+        </section>
+
+        <section id="merchant-sop">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span class="text-orange-500 mr-3">🏪</span> 商户端：三步极简收银法
+                </h2>
+                <p class="text-slate-600 text-lg leading-relaxed">
+                    为避免“见卡涨价”的信任危机，商户执行口径被严格设定为“先干活、后出卡”。本节通过流程图展示了门店收银员的标准作业程序（SOP），核心逻辑是“见码即折，不问原委”，最大程度降低门店的解释成本。
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl border border-orange-200 shadow-md">
+                <h3 class="text-xl font-bold text-center text-orange-600 mb-8 border-b-2 border-orange-100 pb-4">收银执行标准流程</h3>
+                
+                <div class="flex flex-col md:flex-row items-stretch justify-between gap-4">
+                    <div class="flex-1 bg-slate-50 rounded-xl p-6 text-center border-2 border-slate-200 relative">
+                        <div class="text-4xl mb-4">📝</div>
+                        <h4 class="font-bold text-slate-800 text-lg mb-2">Step 1. 正常计价</h4>
+                        <p class="text-sm text-slate-600">服务完成，准备收款。<br>按照门店当日公示价格或会员价进行核算，得出最终应付金额。</p>
+                    </div>
+                    
+                    <div class="flow-arrow-down md:flow-arrow-right"></div>
+                    
+                    <div class="flex-1 bg-slate-50 rounded-xl p-6 text-center border-2 border-slate-200 relative">
+                        <div class="text-4xl mb-4">📱</div>
+                        <h4 class="font-bold text-slate-800 text-lg mb-2">Step 2. 验码 / 验号</h4>
+                        <p class="text-sm text-slate-600">顾客结算前出示【权益中心】有效页面。<br>核对手机尾号是否与实名绑定一致。</p>
+                    </div>
+
+                    <div class="flow-arrow-down md:flow-arrow-right"></div>
+
+                    <div class="flex-1 bg-orange-50 rounded-xl p-6 text-center border-2 border-orange-400 relative shadow-inner">
+                        <div class="text-4xl mb-4">💸</div>
+                        <h4 class="font-bold text-orange-700 text-lg mb-2">Step 3. 直接打折</h4>
+                        <p class="text-sm text-orange-800 font-medium">确认无误后，直接按照品类折扣率扣减应收金额进行结算。</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <div class="font-bold text-red-700 text-sm mb-1">异常 1：显示“无效”？</div>
+                        <div class="text-xs text-red-600">告知客户：您的权益已过期或未达标，本次按原价结算。</div>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <div class="font-bold text-red-700 text-sm mb-1">异常 2：尾号不对？</div>
+                        <div class="text-xs text-red-600">告知客户：请出示您本人实名绑定的权益页面。</div>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <div class="font-bold text-blue-700 text-sm mb-1">异常 3：客户投诉价格？</div>
+                        <div class="text-xs text-blue-600">告知客户：门店仅负责执行折扣，如有规则异议请回社群联系管理员。</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="user-feedback">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span class="text-green-500 mr-3">⚖️</span> 监督端：四维评价体系
+                </h2>
+                <p class="text-slate-600 text-lg leading-relaxed">
+                    用户的每一次消费都是对商户信用的检验。本区域解析了“用户监督清单卡”的评价体系。我们将主观感受量化为 4 项具体的客观标准，每项满足得 1 分。满分 4 分不仅是对商户的认可，更是项目方分配流量资源的核心依据。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white p-8 rounded-2xl border border-green-200 shadow-md">
+                <div class="chart-container w-full">
+                    <canvas id="feedbackChart"></canvas>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="bg-green-50 p-5 rounded-xl border border-green-100">
+                        <h3 class="font-bold text-green-800 mb-3 text-lg border-b border-green-200 pb-2">用户评分细则 (满分4分)</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✅</span>
+                                <div><strong class="text-slate-700">1. 报价清晰:</strong> <span class="text-sm text-slate-600">无隐形消费。</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✅</span>
+                                <div><strong class="text-slate-700">2. 拒绝加价:</strong> <span class="text-sm text-slate-600">过程中未临时提价。</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✅</span>
+                                <div><strong class="text-slate-700">3. 配合结算:</strong> <span class="text-sm text-slate-600">收银员见码即折，态度正常。</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✅</span>
+                                <div><strong class="text-slate-700">4. 效果达标:</strong> <span class="text-sm text-slate-600">服务质量符合预期。</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-slate-800 p-5 rounded-xl shadow-lg relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg">社群反馈模板</div>
+                        <h4 class="text-white font-bold mb-2 text-sm">请用户复制以下格式至社群：</h4>
+                        <pre class="text-green-400 font-mono text-xs whitespace-pre-wrap">
+📍 门店：______
+🛠️ 项目：______
+💰 结算价：______
+🚫 临时加价：无 / 有
+⭐ 综合评分：____分
+💬 一句话评价：______
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="print-specs">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span class="text-slate-500 mr-3">🖨️</span> 落地指南：物料制作 Checklist
+                </h2>
+                <p class="text-slate-600 text-lg leading-relaxed">
+                    为了将上述的数字规范转化为实际门店中可用的物理工具，本节汇总了物料排版与打印的关键指导原则。正确的规格和色彩运用能显著提升物料的工具属性。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white p-6 rounded-xl border-t-4 border-orange-500 shadow-sm">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">方案一：商户执行卡</h3>
+                    <p class="text-xs text-slate-500 mb-4 border-b pb-2">用途：收银台 SOP 指引</p>
+                    <ul class="text-sm text-slate-700 space-y-2">
+                        <li><strong>规格:</strong> A5尺寸 或 10x15cm 桌面摆台</li>
+                        <li><strong>材质:</strong> 300g铜版纸 + 双面塑封(防水防油)</li>
+                        <li><strong>色彩:</strong> 使用<span class="text-orange-600 font-bold">橘黄色</span>(警示与动作)</li>
+                        <li><strong>排版:</strong> 折扣数字不小于 24pt</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border-t-4 border-green-500 shadow-sm">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">方案二：用户监督卡</h3>
+                    <p class="text-xs text-slate-500 mb-4 border-b pb-2">用途：强化监督权与反馈引导</p>
+                    <ul class="text-sm text-slate-700 space-y-2">
+                        <li><strong>规格:</strong> A4横排三折页 或 名片双面卡</li>
+                        <li><strong>重点:</strong> 折页中间印制评分细则</li>
+                        <li><strong>交互:</strong> 印制大型二维码直达反馈表单</li>
+                        <li><strong>色彩:</strong> 使用<span class="text-green-600 font-bold">绿色/蓝色</span>(信任与反馈)</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border-t-4 border-blue-500 shadow-sm">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">方案三：宣传海报</h3>
+                    <p class="text-xs text-slate-500 mb-4 border-b pb-2">用途：流量入口与心智建立</p>
+                    <ul class="text-sm text-slate-700 space-y-2">
+                        <li><strong>规格:</strong> A3/A2 海报 或 易拉宝</li>
+                        <li><strong>布局:</strong> 顶端标题，中端图标，底端活码</li>
+                        <li><strong>测试:</strong> 打印前务必测“草料活码”跳转</li>
+                        <li><strong>防伪:</strong> 页脚注“V1.2 试盘版·当月有效”</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center text-sm text-slate-500 italic">
+                * 设计者注：建议先进行小批量打印测试（各 10 份），在 1-2 家核心门店试行一周后，根据店员反馈的沟通障碍点微调文字，再进行大批量印制。
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 text-center py-6 border-t border-slate-700">
+        <p class="text-sm">生活权益卡运营系统 V1.2 | 数据可视化交互简报</p>
+    </footer>
+
+</div>
+
+<script>
+// Utility function to wrap long labels for Chart.js
+function wrapLabel(label) {
+    if (label.length <= 16) return label;
+    let lines = [];
+    let currentLine = "";
+    // Chunking strings approximately every 12 characters for Chinese readability
+    for(let i = 0; i < label.length; i++) {
+        currentLine += label[i];
+        if(currentLine.length >= 12) {
+            lines.push(currentLine);
+            currentLine = "";
+        }
+    }
+    if(currentLine) lines.push(currentLine);
+    return lines;
+}
+
+// Common tooltip configuration
+const commonTooltipConfig = {
+    callbacks: {
+        title: function(tooltipItems) {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(''); // Join without space for Chinese
+            } else {
+                return label;
+            }
+        }
+    }
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // Chart 1: Discount Depth (Bar Chart)
+    const ctxDiscount = document.getElementById('discountChart').getContext('2d');
+    const discountLabels = ['理发类 (×0.98)', '家政类 (×0.97)', '家电类 (×0.95)'].map(wrapLabel);
+    
+    new Chart(ctxDiscount, {
+        type: 'bar',
+        data: {
+            labels: discountLabels,
+            datasets: [{
+                label: '优惠深度 / 节省比例 (%)',
+                // Data represents the discount depth (1 - multiplier) * 100
+                data: [2, 3, 5],
+                backgroundColor: [
+                    'rgba(59, 130, 246, 0.8)', // Blue
+                    'rgba(249, 115, 22, 0.8)', // Orange
+                    'rgba(16, 185, 129, 0.8)'  // Green
+                ],
+                borderColor: [
+                    'rgb(37, 99, 235)',
+                    'rgb(234, 88, 12)',
+                    'rgb(5, 150, 105)'
+                ],
+                borderWidth: 1,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: commonTooltipConfig
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: '优惠折扣深度 (%)', font: { weight: 'bold' } }
+                },
+                x: {
+                    ticks: { font: { size: 14 } }
+                }
+            }
+        }
+    });
+
+    // Chart 2: Feedback Scoring (Donut Chart)
+    const ctxFeedback = document.getElementById('feedbackChart').getContext('2d');
+    const feedbackLabels = [
+        '明确报价无隐形消费 (1分)', 
+        '服务过程拒绝临时加价 (1分)', 
+        '见码即折配合顺畅结算 (1分)', 
+        '服务质量与效果达标 (1分)'
+    ].map(wrapLabel);
+
+    new Chart(ctxFeedback, {
+        type: 'doughnut',
+        data: {
+            labels: feedbackLabels,
+            datasets: [{
+                data: [25, 25, 25, 25], // 4 equal parts representing 1 point each
+                backgroundColor: [
+                    'rgba(16, 185, 129, 0.9)', // Green 1
+                    'rgba(5, 150, 105, 0.9)',  // Green 2
+                    'rgba(4, 120, 87, 0.9)',   // Green 3
+                    'rgba(6, 95, 70, 0.9)'     // Green 4
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { padding: 20, font: { size: 12 } }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: commonTooltipConfig.callbacks.title,
+                        label: function(context) {
+                            return ' 占比: ' + context.parsed + '% (得 1 分)';
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [{
+            id: 'textCenter',
+            beforeDraw: function(chart) {
+                var width = chart.width,
+                    height = chart.height,
+                    ctx = chart.ctx;
+                ctx.restore();
+                var fontSize = (height / 150).toFixed(2);
+                ctx.font = "bold " + fontSize + "em sans-serif";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#0f172a";
+                var text = "满分 4分",
+                    textX = Math.round((width - ctx.measureText(text).width) / 2),
+                    textY = height / 2 - (chart.legend.height / 2); // adjust for bottom legend
+                ctx.fillText(text, textX, textY);
+                ctx.save();
+            }
+        }]
+    });
+
+});
+</script>
+</body>
+</html>
