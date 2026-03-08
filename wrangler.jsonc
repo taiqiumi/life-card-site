@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "life-card-site",
+  "name": "life-card-site11",
   "compatibility_date": "2025-09-27",
   "observability": {
     "enabled": true
