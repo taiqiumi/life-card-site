@@ -1,548 +1,1021 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>生活权益卡一卡通｜运营标准与交互演示 (V1.3)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>生活权益卡一卡通 · 前台试运营版</title>
   <style>
-    .chart-container{
-      position:relative;width:100%;max-width:600px;margin-left:auto;margin-right:auto;
-      height:350px;max-height:420px;
+    :root{
+      --bg:#f7f8fa;--card:#fff;--line:#eaecef;--text:#1f1f1f;--muted:#666;
+      --primary:#2e8b57;--primary-deep:#1f6b43;--primary-soft:#eaf6ef;
+      --gold:#c89b3c;--gold-soft:#f8f1e3;--blue-soft:#eef6ff;--blue-text:#3273dc;
+      --danger:#c75a3a;--danger-soft:#fff2ed;
     }
-    @media (min-width:768px){.chart-container{height:390px;}}
-    ::-webkit-scrollbar{width:6px;height:6px;}
-    ::-webkit-scrollbar-track{background:#f1f5f9;}
-    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
-    ::-webkit-scrollbar-thumb:hover{background:#94a3b8;}
-    .tab-active{background-color:#eff6ff;border-right:4px solid #3b82f6;color:#1d4ed8;font-weight:600;}
-    .flow-arrow-down::after{content:'↓';display:block;text-align:center;font-size:1.5rem;color:#94a3b8;margin:.5rem 0;}
-    @media (min-width:768px){
-      .flow-arrow-right::after{content:'→';display:flex;align-items:center;justify-content:center;
-        font-size:2rem;color:#94a3b8;height:100%;padding:0 1rem;}
-      .flow-arrow-down::after{display:none;}
-    }
-  </style>
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:"PingFang SC","Microsoft YaHei",sans-serif}
+    button,input,select,textarea{font:inherit} button{cursor:pointer}
+    .wrap{max-width:1520px;margin:0 auto;padding:20px}
+    .top{margin-bottom:18px}.top h1{margin:0 0 8px;font-size:28px}.top p{margin:0;color:var(--muted);line-height:1.7}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+    .tab{border:1px solid var(--line);background:#fff;color:#355143;border-radius:999px;padding:10px 16px}
+    .tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .view{display:none}.view.active{display:block}
+    .module-grid{display:flex;gap:10px;flex-wrap:wrap}
+    .module-chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;color:#355143}
+    .module-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .gallery{display:flex;gap:20px;flex-wrap:wrap}
+    .phone{width:390px;background:#fff;border:1px solid #dde3df;border-radius:32px;padding:14px;box-shadow:0 16px 42px rgba(31,46,36,.12)}
+    .screen{background:var(--bg);border-radius:24px;overflow:hidden;min-height:780px;border:1px solid #edf1ee;position:relative}
+    .statusbar{height:22px;background:#fff}
+    .nav{height:56px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #eef0f2;font-size:15px}
+    .nav .title{font-weight:700}
+    .nav .ghost-link{color:var(--muted);font-size:13px}
+    .content{padding:16px;padding-bottom:96px}
+    .banner{background:linear-gradient(135deg,#f2fbf5 0%,#e1f2e8 100%);border:1px solid #dcece2;border-radius:20px;padding:20px}
+    .banner .big{font-size:30px;line-height:1.2;font-weight:800;margin:0 0 10px}
+    .banner .desc{color:#3b4a42;line-height:1.75;font-size:14px}
+    .banner .mini{color:var(--muted);margin-top:10px;font-size:12px;line-height:1.7}
+    .btn-primary,.btn-secondary,.btn-light,.btn-danger{border-radius:12px;height:48px;padding:0 16px;border:none}
+    .btn-primary{background:var(--primary);color:#fff;width:100%}
+    .btn-secondary{background:#fff;color:var(--primary);width:100%;border:1px solid #d8e5dd}
+    .btn-light{height:40px;background:var(--primary-soft);color:var(--primary);border:1px solid #dbeee3}
+    .btn-danger{background:var(--danger-soft);color:var(--danger);border:1px solid #f1d8cd}
+    .stack{display:grid;gap:12px}
+    .section-title{font-size:18px;font-weight:700;margin:20px 0 12px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 6px 16px rgba(31,46,36,.04)}
+    .mini-card{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start}
+    .icon{width:42px;height:42px;border-radius:12px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-size:18px;font-weight:700}
+    .small{color:var(--muted);font-size:13px;line-height:1.7}
+    .merchant-card{display:grid;grid-template-columns:76px 1fr;gap:12px}
+    .featured-card{grid-template-columns:78px 1fr !important;padding:10px !important;align-items:start !important}
+    .featured-thumb{width:100% !important;height:44px !important;border-radius:10px !important}
+    .featured-card #homeFeaturedName{font-size:14px;line-height:1.2}
+    .featured-card #homeFeaturedOffer{font-size:14px;line-height:1.2;margin-top:2px}
+    .featured-card #homeFeaturedDesc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.55;font-size:12px}
+    .featured-actions{margin-top:8px !important;display:flex !important;gap:8px !important;flex-wrap:wrap}
+    .featured-actions .btn-light{height:36px !important;padding:0 14px !important;width:auto !important;border-radius:12px !important}
+    
+    .clickable-featured{cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
+    .clickable-featured:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(31,46,36,.12)}
+
+    .featured-actions .btn-primary{height:40px !important;padding:0 18px !important;width:auto !important;min-width:132px;border-radius:12px !important}
+    .merchant-thumb{height:76px;border-radius:14px;background:linear-gradient(135deg,#dfe9f8,#edf4ff)}
+    .hero-thumb{height:180px;border-radius:18px;background:linear-gradient(135deg,#e7d6c6,#f4ebe1)}
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 10px}
+    .tag{height:24px;line-height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .tag.green{background:var(--primary-soft);color:var(--primary)}
+    .tag.blue{background:var(--blue-soft);color:var(--blue-text)}
+    .tag.gold{background:var(--gold-soft);color:var(--gold)}
+    .tag.red{background:var(--danger-soft);color:var(--danger)}
+    .list{display:grid;gap:10px}
+    .line{display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .line .label{color:var(--muted)}
+    .hint{background:var(--primary-soft);border:1px solid #dbeee3;color:var(--primary-deep);border-radius:14px;padding:12px 14px;line-height:1.7;font-size:13px}
+    .hint.warn{background:#fff8ed;border-color:#f2dfb8;color:#8b5b1f}
+    .step{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start}
+    .step .num{width:24px;height:24px;border-radius:999px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-size:12px;font-weight:700}
+    .dock{position:absolute;left:14px;right:14px;bottom:14px;background:rgba(255,255,255,.94);border:1px solid #e8eeea;backdrop-filter:blur(8px);border-radius:18px;padding:10px;display:grid;gap:10px}
+    .dual-btn{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+    .input,.textarea{width:100%;border-radius:12px;border:1px solid #dfe3e7;background:#fff;padding:0 12px;font-size:15px}
+    .input{height:48px}
+    .textarea{padding:12px;min-height:92px;resize:vertical}
+    .upload{min-height:200px;border-radius:16px;border:1px dashed #cfe2d7;background:#fff;display:grid;place-items:center;text-align:center;color:var(--muted);padding:16px}
+    .result-card{background:#f9fafb;border:1px solid #edf0f3;border-radius:16px;padding:16px}
+    .success{display:grid;place-items:center;text-align:center;min-height:640px;padding:20px}
+    .success .circle{width:64px;height:64px;border-radius:50%;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-size:28px;font-weight:800;margin-bottom:18px}
+    .reward-box{background:#f9fafb;border:1px solid #edf0f3;border-radius:16px;padding:14px;line-height:1.7}
+    .reward-ok{background:#eaf6ef;border-color:#d7ebdf;color:var(--primary-deep)}
+    .reward-no{background:#fff4e8;border-color:#f0dcc2;color:#8b5b1f}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .stats .mini{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+    .check-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .check-item{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+    .module-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .module-chip{border:1px solid #d9e6de;background:#fff;color:#355143;border-radius:14px;padding:12px 10px;text-align:center;font-weight:700}
+    .module-chip.active{background:var(--primary-soft);border-color:var(--primary);color:var(--primary-deep)}
+    .record{padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+    .empty{padding:18px;border:1px dashed #d3ddd7;border-radius:14px;color:var(--muted);text-align:center;background:#fff}
+    .preview-box{display:grid;gap:10px;margin-top:12px}
+    .image-preview{display:none;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+    .image-preview.active{display:block}
+    .image-preview img{max-width:100%;border-radius:12px;display:block}
+    .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);padding:12px 16px;background:#1f2e24;color:#fff;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.25s ease;z-index:99;max-width:90vw;text-align:center}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .linkbtn{background:none;border:none;color:var(--primary);padding:0;text-align:left}
+    @media (max-width:640px){.wrap{padding:12px}.gallery{justify-content:center}.phone{width:100%;max-width:390px}.stats{grid-template-columns:repeat(2,1fr)}.check-grid{grid-template-columns:1fr}}
+  .upload-photo-box{border:1px dashed var(--line);border-radius:16px;min-height:120px;background:#f8fafc;display:flex;align-items:center;justify-content:center;color:var(--muted);overflow:hidden;text-align:center;padding:12px}.upload-photo-box img{width:100%;height:160px;object-fit:cover;display:block}.merchant-entry{cursor:pointer}</style>
 </head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <h1>生活权益卡一卡通 · 前台试运营版</h1>
+      <p>这一版只保留用户和商户真正会看到、会操作的前台页面。重点补上：入口更聚焦、按钮真联动、核销更像真实流程、照片补贴更像真实上传、消费后有监督反馈闭环。</p>
+    </div>
 
-<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-200">
-  <div class="flex flex-col md:flex-row min-h-screen">
+    <div class="toolbar">
+      <button class="tab active" data-view="home">首页</button>
+      <button class="tab" data-view="merchant-list">商户列表</button>
+      <button class="tab" data-view="merchant-detail">商户详情</button>
+      <button class="tab" data-view="photo">照片补贴</button>
+      <button class="tab" data-view="verify">门店核销</button>
+      <button class="tab" data-view="feedback">监督反馈</button>
+      <button class="tab" data-view="success">结果页</button>
+    </div>
 
-    <!-- Navigation Sidebar -->
-    <nav class="w-full md:w-64 bg-white shadow-md z-10 flex-shrink-0 md:sticky md:top-0 md:h-screen">
-      <div class="p-6 border-b border-slate-100">
-        <h1 class="text-xl font-bold text-blue-700 leading-tight">
-          生活权益卡一卡通<br>
-          <span class="text-sm font-normal text-slate-500">运营交互手册 V1.3</span>
-        </h1>
-      </div>
-      <ul class="flex md:flex-col py-2 overflow-x-auto md:overflow-x-visible">
-        <li class="flex-shrink-0">
-          <button onclick="switchTab('overview', this)"
-            class="w-full text-left px-6 py-4 text-slate-600 hover:bg-slate-50 transition-colors tab-btn tab-active">🔄 模式总览</button>
-        </li>
-        <li class="flex-shrink-0">
-          <button onclick="switchTab('user-hub', this)"
-            class="w-full text-left px-6 py-4 text-slate-600 hover:bg-slate-50 transition-colors tab-btn">📱 用户端：权益中心</button>
-        </li>
-        <li class="flex-shrink-0">
-          <button onclick="switchTab('merchant', this)"
-            class="w-full text-left px-6 py-4 text-slate-600 hover:bg-slate-50 transition-colors tab-btn">🏪 商户端：执行标准</button>
-        </li>
-        <li class="flex-shrink-0">
-          <button onclick="switchTab('feedback', this)"
-            class="w-full text-left px-6 py-4 text-slate-600 hover:bg-slate-50 transition-colors tab-btn">⚖️ 监督端：反馈机制</button>
-        </li>
-      </ul>
-    </nav>
-
-    <!-- Main Content Area -->
-    <main class="flex-1 p-6 md:p-10 overflow-x-hidden">
-
-      <!-- Section 1: Overview -->
-      <section id="overview" class="tab-content animate-fade-in">
-        <header class="mb-8">
-          <h2 class="text-3xl font-bold text-slate-800 mb-2">项目运营闭环总览</h2>
-          <p class="text-slate-600 leading-relaxed">
-            本区域展示《生活权益卡一卡通》试盘版的核心逻辑：
-            <span class="font-semibold text-slate-800">“结算时出卡/报码再打折”</span> +
-            <span class="font-semibold text-slate-800">“用户监督反馈筛选商户”</span>。
-            目标是降低沟通成本，并用真实反馈决定是否继续合作/继续引流。
-          </p>
-        </header>
-
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 mb-8">
-          <h3 class="text-lg font-bold text-slate-700 mb-6 border-l-4 border-blue-500 pl-3">核心业务流转模型</h3>
-
-          <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex-1 bg-blue-50 rounded-lg p-6 text-center border border-blue-100 shadow-sm relative w-full">
-              <div class="text-3xl mb-2">🛒</div>
-              <h4 class="font-bold text-blue-800 mb-1">1. 达标发卡</h4>
-              <p class="text-xs text-slate-600">群内购买指定商品≥2次<br>周二/周四统一发卡</p>
+    <section class="view active" id="view-home">
+      <div class="gallery"><div class="phone"><div class="screen">
+        <div class="statusbar"></div>
+        <div class="nav"><span>返回</span><span class="title">权益卡</span><span class="ghost-link">规则</span></div>
+        <div class="content">
+          <div class="banner">
+            <div class="big">先省一笔，再看服务值不值</div>
+            <div class="desc">生活权益卡不是普通优惠页。它先帮家庭拿到真实补贴，再把商户服务拉进监督反馈闭环。谁服务好，谁继续被引流；谁体验差，谁就被筛掉。</div>
+            <div class="mini">这不是一次性满减，而是“家庭补给 + 门店服务 + 用户监督”的长期权益入口。</div>
+            <div class="stack" style="margin-top:16px;">
+              <button class="btn-primary nav-btn" data-go="merchant-list">先看看附近商户</button>
+              <button class="btn-secondary nav-btn" data-go="photo">先领照片补贴</button>
             </div>
-            <div class="flow-arrow-down md:flow-arrow-right"></div>
+          </div>
 
-            <div class="flex-1 bg-orange-50 rounded-lg p-6 text-center border border-orange-100 shadow-sm relative w-full">
-              <div class="text-3xl mb-2">🏪</div>
-              <h4 class="font-bold text-orange-800 mb-1">2. 门店消费</h4>
-              <p class="text-xs text-slate-600">按门店正常流程消费<br>结算时出示权益状态享折扣</p>
-            </div>
-            <div class="flow-arrow-down md:flow-arrow-right"></div>
+          <div class="section-title">这张卡到底解决什么</div>
+          <div class="stack">
+            <div class="card mini-card"><div class="icon">省</div><div><div style="font-weight:700;">让用户现在就有真实好处</div><div class="small">先把理发、维修、洗车、家庭常用品这些高频消费，做成用户愿意留下来的真实补贴入口。</div></div></div>
+            <div class="card mini-card"><div class="icon">筛</div><div><div style="font-weight:700;">让商户不是白拿流量</div><div class="small">用户消费完必须反馈。服务差、临时加价、态度差，平台会记录，后续就会少推甚至停推。</div></div></div>
+            <div class="card mini-card"><div class="icon">稳</div><div><div style="font-weight:700;">让社区合作慢慢变成长期关系</div><div class="small">从家庭补给起步，再延展到门店消费和生活服务，让用户不爱折腾也愿意留下。</div></div></div>
+          </div>
 
-            <div class="flex-1 bg-green-50 rounded-lg p-6 text-center border border-green-100 shadow-sm relative w-full">
-              <div class="text-3xl mb-2">📝</div>
-              <h4 class="font-bold text-green-800 mb-1">3. 监督反馈</h4>
-              <p class="text-xs text-slate-600">用户根据体验打分<br>重点记录是否临时加价</p>
+          <div class="section-title">本周优先试运营的入口</div>
+          <div class="card merchant-card featured-card" id="homeFeaturedCard" style="margin-bottom:14px;">
+            <div class="merchant-thumb featured-thumb" id="homeFeaturedThumb" style="background:linear-gradient(135deg,#e7d6c6,#f4ebe1);"></div>
+            <div style="flex:1;">
+              <div id="homeFeaturedName" style="font-weight:700;">星艺造型</div>
+              <div class="tags" id="homeFeaturedTags"><span class="tag green">支持权益卡</span><span class="tag blue">首购补贴</span><span class="tag gold">会员待遇</span></div>
+              <div id="homeFeaturedOffer" style="font-weight:700;color:var(--primary);">理发40补15</div>
+              <div class="small" id="homeFeaturedDesc">点击整张推荐卡，直接打开这家商户的地图位置。</div>
             </div>
-            <div class="flow-arrow-down md:flow-arrow-right"></div>
+          </div>
 
-            <div class="flex-1 bg-slate-100 rounded-lg p-6 text-center border border-slate-200 shadow-sm relative w-full">
-              <div class="text-3xl mb-2">⚙️</div>
-              <h4 class="font-bold text-slate-800 mb-1">4. 动态调整</h4>
-              <p class="text-xs text-slate-600">项目方依据分数<br>决定是否继续引流/合作</p>
-            </div>
+          <div class="section-title">按模块选入口</div>
+          <div class="card stack">
+            <div class="small">如果您是用户，不想自己翻商户列表，就直接选模块。系统会把上面的推荐位切到当前最适合试运营的门店，并保留跳转功能。</div>
+            <select id="homeModuleSelect" class="input">
+              <option value="hair">理发</option>
+              <option value="dining">餐饮</option>
+              <option value="appliance">家电</option>
+              <option value="carwash">洗车</option>
+              <option value="repair">维修</option>
+              <option value="care">修护</option>
+            </select>
+          </div>
+
+          <div class="section-title">先确认开通权益卡</div>
+          <div class="card stack">
+            <div class="small">用户扫码进来后，不用复杂注册。只需要确认手机号后四位，并勾选已领取/已确认权益卡，就算完成开通确认，后面到店就能核验。</div>
+            <input id="activatePhone4" class="input" placeholder="输入手机号后四位" maxlength="4" />
+            <select id="activateCardType" class="input">
+              <option value="life">生活权益卡</option>
+              <option value="member">门店会员权益卡</option>
+            </select>
+            <label class="check-item" style="cursor:pointer;"><input id="activateAgree" type="checkbox" style="margin-top:3px;" /><div class="small">我已确认本手机号对应的权益卡可用于试运营门店核验。</div></label>
+            <button class="btn-primary" id="activateCardBtn">确认开通权益卡</button>
+            <div id="activateCardResult" class="small"></div>
+          </div>
+
+          <div class="section-title">怎么用更省事</div>
+          <div class="card stack">
+            <div class="step"><div class="num">1</div><div class="small">先看值不值，再决定去不去。</div></div>
+            <div class="step"><div class="num">2</div><div class="small">出示手机号后四位，确认本次可用权益。</div></div>
+            <div class="step"><div class="num">3</div><div class="small">消费完成马上反馈，点几下就行。</div></div>
+            <div class="step"><div class="num">4</div><div class="small">真实反馈好的门店，后面才会继续推荐。</div></div>
           </div>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-            <h4 class="font-bold text-slate-700 mb-2">💡 核心准则</h4>
-            <p class="text-sm text-slate-600">
-              以当月公告与门店清单为准。<strong>不要求门店提前确认价</strong>，
-              若出现临时加价/加项/隐形收费，以用户反馈作为筛选依据。
-            </p>
-          </div>
-
-          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-            <h4 class="font-bold text-slate-700 mb-2">💰 折扣品类 (当前)</h4>
-            <ul class="text-sm text-slate-600 space-y-1 mt-2">
-              <li>✂️ 理发类：<span class="font-mono font-bold text-blue-600">× 0.98</span></li>
-              <li>🧹 家政类：<span class="font-mono font-bold text-blue-600">× 0.97</span></li>
-              <li>📺 家电类：<span class="font-mono font-bold text-blue-600">× 0.95</span></li>
-            </ul>
-          </div>
-
-          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-            <h4 class="font-bold text-slate-700 mb-2">⚠️ 补贴性质</h4>
-            <p class="text-sm text-slate-600">采用“次数”口径，当月有效，月末清零，以减少沉淀争议。</p>
+        <div class="dock">
+          <div class="dual-btn">
+            <button class="btn-secondary" id="homeSampleMerchantBtn">看一家示范门店</button>
+            <button class="btn-primary" id="homeMapOpenBtn">查看门店地图</button>
           </div>
         </div>
-      </section>
+      </div></div></div>
+    </section>
 
-      <!-- Section 2: User Hub -->
-      <section id="user-hub" class="tab-content hidden animate-fade-in">
-        <header class="mb-8">
-          <h2 class="text-3xl font-bold text-slate-800 mb-2">用户端：权益中心模拟</h2>
-          <p class="text-slate-600 leading-relaxed">模拟用户扫码进入【权益中心】后的体验。输入手机号，体验“仅显示后四位”的核验逻辑。</p>
-        </header>
-
-        <div class="max-w-md mx-auto bg-blue-600 rounded-2xl shadow-xl overflow-hidden border border-blue-700">
-          <div class="bg-blue-700 px-6 py-4 text-center">
-            <h3 class="text-white font-bold text-lg">生活权益卡一卡通｜权益中心</h3>
-            <p class="text-blue-200 text-xs mt-1">试盘版 · 本月有效</p>
-          </div>
-
-          <div class="p-6 bg-slate-50">
-            <div class="bg-blue-50 text-blue-800 text-xs p-3 rounded-lg mb-6 border border-blue-100">
-              <strong>结算出卡规则：</strong> 先问价 → 确认最终价 → 干完活 → 结算时出卡/报码再打折
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 mb-6">
-              <h4 class="text-sm font-bold text-slate-700 mb-3">查询我的权益</h4>
-              <p class="text-xs text-slate-500 mb-4">提示：输入尾号为 <span class="font-mono font-bold text-blue-600">1234</span> 的手机号体验有效状态。</p>
-
-              <div class="flex gap-2 mb-4">
-                <input type="text" id="phoneInput" placeholder="输入11位手机号" class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" maxlength="11">
-                <button onclick="checkUserStatus()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">查询</button>
-              </div>
-
-              <div id="statusResult" class="hidden rounded-lg p-4 text-center transition-all">
-                <div id="statusBadge" class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-2"></div>
-                <div class="text-sm text-slate-600 mb-1">绑定手机尾号: <span id="tailNumber" class="font-mono font-bold text-slate-800"></span></div>
-
-                <div id="cardNumberRow" class="text-sm text-slate-600 mb-1 hidden">卡号: <span id="cardNumber" class="font-mono font-bold text-slate-800"></span></div>
-
-                <div id="codeArea" class="mt-4 p-3 bg-slate-100 rounded border border-slate-200 border-dashed hidden">
-                  <div class="text-xs text-slate-500 mb-1">当月权益码 (向店员出示)</div>
-                  <div id="monthCode" class="text-2xl font-mono font-bold text-blue-700 tracking-wider">MAR-7K3A</div>
-                </div>
+    <section class="view" id="view-merchant-list">
+      <div class="gallery"><div class="phone"><div class="screen">
+        <div class="statusbar"></div>
+        <div class="nav"><span class="nav-btn ghost-link" data-go="home">返回</span><span class="title">合作商户</span><span></span></div>
+        <div class="content">
+          <div class="small" style="margin-bottom:14px;">第一梯队优先上线项目：美容美发、家电电脑维修、洗车、维修、修护、餐饮。先跑高频，再慢慢扩。</div>
+          <div class="tags" style="margin-bottom:14px;"><span class="tag green">附近</span><span class="tag green">支持权益卡</span><span class="tag blue">可首购</span><span class="tag red">消费后需反馈</span></div>
+          <div class="stack">
+            <div class="card merchant-card merchant-entry" data-merchant="xingyi">
+              <div class="merchant-thumb" style="background:linear-gradient(135deg,#e7d6c6,#f4ebe1)"></div>
+              <div>
+                <div style="font-weight:700;">星艺造型</div>
+                <div class="tags"><span class="tag green">美容美发</span><span class="tag blue">首购可用</span><span class="tag gold">会员待遇</span></div>
+                <div style="font-weight:700;color:var(--primary);">理发40补15</div>
+                <div class="small">距离1.2km · 用户消费后需要提交监督反馈。</div>
+                <button class="btn-light merchant-open" data-merchant="xingyi" style="margin-top:10px;">查看详情</button>
               </div>
             </div>
-
-            <div class="space-y-3">
-              <button class="w-full bg-white border border-slate-200 rounded-xl p-4 text-left flex justify-between items-center shadow-sm hover:border-blue-300 transition-colors">
-                <span class="text-sm font-medium text-slate-700">📍 本月合作门店清单 (5-6家)</span>
-                <span class="text-slate-400">›</span>
-              </button>
+            <div class="card merchant-card merchant-entry" data-merchant="repair">
+              <div class="merchant-thumb" style="background:linear-gradient(135deg,#d9e8ff,#edf5ff)"></div>
+              <div>
+                <div style="font-weight:700;">快修工坊</div>
+                <div class="tags"><span class="tag green">家电电脑维修</span><span class="tag blue">支持权益卡</span></div>
+                <div style="font-weight:700;color:var(--primary);">检测50补20</div>
+                <div class="small">距离2.3km · 适合检测“是否临时加价”反馈。</div>
+                <button class="btn-light merchant-open" data-merchant="repair" style="margin-top:10px;">查看详情</button>
+              </div>
+            </div>
+            <div class="card merchant-card merchant-entry" data-merchant="carwash">
+              <div class="merchant-thumb" style="background:linear-gradient(135deg,#dcebdc,#eef8ee)"></div>
+              <div>
+                <div style="font-weight:700;">泡泡洗车</div>
+                <div class="tags"><span class="tag green">洗车</span><span class="tag blue">首购可用</span></div>
+                <div style="font-weight:700;color:var(--primary);">精洗39补10</div>
+                <div class="small">距离1.8km · 适合测试到店即核销的简单流程。</div>
+                <button class="btn-light merchant-open" data-merchant="carwash" style="margin-top:10px;">查看详情</button>
+              </div>
+            </div>
+            <div class="card merchant-card merchant-entry" data-merchant="dining">
+              <div class="merchant-thumb" style="background:linear-gradient(135deg,#ffe6cf,#fff4e4)"></div>
+              <div>
+                <div style="font-weight:700;">邻里小厨</div>
+                <div class="tags"><span class="tag green">社区餐饮</span><span class="tag blue">支持权益卡</span></div>
+                <div style="font-weight:700;color:var(--primary);">套餐38补10</div>
+                <div class="small">距离1.6km · 适合测试到店用餐、支付后反馈这一整条闭环。</div>
+                <button class="btn-light merchant-open" data-merchant="dining" style="margin-top:10px;">查看详情</button>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+        <div class="dock"><button class="btn-primary nav-btn" data-go="merchant-detail">进入示范门店详情</button></div>
+      </div></div></div>
+    </section>
 
-      <!-- Section 3: Merchant Execution -->
-      <section id="merchant" class="tab-content hidden animate-fade-in">
-        <header class="mb-8">
-          <h2 class="text-3xl font-bold text-slate-800 mb-2">商户端：执行口径标准</h2>
-          <p class="text-slate-600 leading-relaxed">
-            发放给门店老板及店员的“简版口径卡”。核心逻辑是不提前提示“确认价格”，
-            将折扣动作纯粹化为“结算标准动作”，价格透明由用户监督反馈决定。
-          </p>
-        </header>
+    <section class="view" id="view-merchant-detail">
+      <div class="gallery"><div class="phone"><div class="screen">
+        <div class="statusbar"></div>
+        <div class="nav"><span class="nav-btn ghost-link" data-go="merchant-list">返回</span><span class="title">商户详情</span><span>监督</span></div>
+        <div class="content">
+          <div class="hero-thumb" id="detailHero"></div>
+          <div class="card" style="margin-top:14px;">
+            <div id="detailName" style="font-size:22px;font-weight:800;">星艺造型</div>
+            <div class="small" id="detailMeta">社区首批合作商户 · 距离1.2km</div>
+            <div class="tags" id="detailTags"></div>
+            <div class="hint" id="detailHint">先给用户真实优惠，再看门店服务值不值。用户消费后需要监督反馈，平台会据此决定是否继续推流。</div>
+          </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="section-title">商户照片展示</div>
+          <div class="card stack small">
+            <div>
+              <div style="font-weight:700;color:var(--text);margin-bottom:8px;">门头照片</div>
+              <div id="storefrontPreview" class="upload-photo-box">未上传门头照片</div>
+              <input type="file" id="storefrontInput" accept="image/*" style="margin-top:10px;width:100%;" />
+            </div>
+            <div>
+              <div style="font-weight:700;color:var(--text);margin-bottom:8px;">店内业务介绍照片</div>
+              <div id="introPreview" class="upload-photo-box">未上传业务介绍照片</div>
+              <input type="file" id="introInput" accept="image/*" style="margin-top:10px;width:100%;" />
+            </div>
+            <div class="hint">建议商户固定上传两张图：一张门头、一张业务介绍。用户点进来先看到真实门店样子，再决定去不去。</div>
+          </div>
+
+          <div class="section-title">本店当前可用补贴</div>
+          <div class="card list" id="detailServices"></div>
+
+          <div class="section-title">为什么这家店能留在列表里</div>
+          <div class="card stack" id="detailRules"></div>
+
+          <div class="section-title">门店信息</div>
+          <div class="card list small" id="detailInfo"></div>
+        </div>
+        <div class="dock">
+          <div class="dual-btn">
+            <button class="btn-secondary" id="callBtn">拨打电话</button>
+            <button class="btn-primary" id="consumeBtn">查看地图</button>
+          </div>
+        </div>
+      </div></div></div>
+    </section>
+
+<section class="view" id="view-photo">
+      <div class="gallery"><div class="phone"><div class="screen">
+        <div class="statusbar"></div>
+        <div class="nav"><span class="nav-btn ghost-link" data-go="home">返回</span><span class="title">照片补贴</span><span>记录</span></div>
+        <div class="content">
+          <div class="section-title" style="margin-top:4px;">上传真实照片，领首购补贴</div>
+          <div class="small" style="margin-bottom:14px;">这版不再用“照片标识”假装上传。您可以直接选图片，系统会按文件名+大小生成简易指纹做重复判断。</div>
+          <div class="card small" style="margin-bottom:14px;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:8px;">补贴规则</div>
+            <div>• 首购指定商品照片补贴统一 <strong style="color:var(--primary);">5 元</strong></div>
+            <div>• 当前支持：食用油、调味/酱油、食用盐</div>
+            <div>• 同一张照片重复上传不重复补贴</div>
+          </div>
+          <div class="stats" style="margin-bottom:14px;">
+            <div class="mini"><div class="small">累计补贴</div><div id="rewardToday" style="font-size:22px;font-weight:800;color:var(--primary);">0元</div></div>
+            <div class="mini"><div class="small">累计上传</div><div id="rewardTotal" style="font-size:22px;font-weight:800;">0</div></div>
+            <div class="mini"><div class="small">有效照片</div><div id="rewardValid" style="font-size:22px;font-weight:800;">0</div></div>
+            <div class="mini"><div class="small">重复照片</div><div id="rewardDup" style="font-size:22px;font-weight:800;">0</div></div>
+          </div>
+
+          <div class="card">
+            <div class="small" style="margin-bottom:8px;">照片品类</div>
+            <select class="input" id="photoTypeSelect" style="margin-bottom:12px;"></select>
+            <div class="small" style="margin-bottom:8px;">拍照或上传照片</div>
+            <input type="file" id="photoFileInput" class="input" accept="image/*" capture="environment" />
+            <div class="preview-box">
+              <div id="imagePreview" class="image-preview">
+                <div class="small" style="margin-bottom:8px;">当前照片预览</div>
+                <img id="previewImg" alt="照片预览">
+                <div id="previewMeta" class="small" style="margin-top:8px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="photoRewardResult" class="reward-box" style="margin-top:14px;">等待上传。当前未计算补贴。</div>
+
+          <div class="section-title">最近照片补贴记录</div>
+          <div id="photoRewardList" class="stack"></div>
+        </div>
+        <div class="dock">
+          <button class="btn-primary" id="photoRewardBtn">上传并领取补贴</button>
+        </div>
+      </div></div></div>
+    </section>
+
+    <section class="view" id="view-verify">
+      <div class="gallery"><div class="phone"><div class="screen">
+        <div class="statusbar"></div>
+        <div class="nav"><span class="nav-btn ghost-link" data-go="merchant-detail">返回</span><span class="title">门店核销</span><span>商户端</span></div>
+        <div class="content">
+          <div class="hint warn">这一页不再直接默认“核销成功”。必须先选门店、项目、输入手机号后四位，再由系统判断本次能不能用。</div>
+
+          <div class="section-title">核验信息</div>
+          <div class="card stack">
+            <div>
+              <div class="small" style="margin-bottom:8px;">门店</div>
+              <select class="input" id="merchantSelect"></select>
+            </div>
+            <div>
+              <div class="small" style="margin-bottom:8px;">消费项目</div>
+              <select class="input" id="serviceSelect"></select>
+            </div>
+            <div>
+              <div class="small" style="margin-bottom:8px;">手机号后四位</div>
+              <input class="input" id="verifyPhoneInput" placeholder="例：1234" maxlength="4">
+            </div>
+          </div>
+
+          <div class="section-title">核验结果</div>
+          <div id="verifyResult" class="result-card small">请先填写核验信息，再点“先核验”。</div>
+
+          <div class="section-title">当次消费信息</div>
+          <div class="card list small">
+            <div class="line"><span class="label">门店项目原价</span><strong id="priceText">¥40</strong></div>
+            <div class="line"><span class="label">本次可抵扣</span><strong id="discountText" style="color:var(--primary);">¥15</strong></div>
+            <div class="line"><span class="label">用户预计实付</span><strong id="payText">¥25</strong></div>
+          </div>
+
+          <div class="section-title">今日核销记录</div>
+          <div id="todayWriteoff" class="stack"></div>
+        </div>
+        <div class="dock">
+          <div class="dual-btn">
+            <button class="btn-secondary" id="verifyBtn">先核验</button>
+            <button class="btn-primary" id="writeoffBtn">确认核销</button>
+          </div>
+        </div>
+      </div></div></div>
+    </section>
+
+    <section class="view" id="view-feedback">
+      <div class="gallery"><div class="phone"><div class="screen">
+        <div class="statusbar"></div>
+        <div class="nav"><span class="nav-btn ghost-link" data-go="success">返回</span><span class="title">监督反馈</span><span>用户端</span></div>
+        <div class="content">
+          <div class="hint">这一步是这个项目和普通优惠页最不一样的地方。消费结束后，用户要把“有没有临时加价、态度好不好、到店是否顺利、值不值继续合作”反馈回来。</div>
+
+          <div class="section-title">本次消费反馈</div>
+          <div class="card stack">
+            <div>
+              <div class="small" style="margin-bottom:8px;">门店</div>
+              <input class="input" id="fbMerchant" readonly>
+            </div>
+            <div>
+              <div class="small" style="margin-bottom:8px;">消费模块（点一下就行）</div>
+              <input class="input" id="fbService" readonly placeholder="会自动带出，也可以手动点选下面模块">
+            </div>
+            <div>
+              <div class="module-grid" id="fbModuleGrid">
+                <button type="button" class="module-chip fb-module-chip" data-module="理发">理发</button>
+                <button type="button" class="module-chip fb-module-chip" data-module="维修">维修</button>
+                <button type="button" class="module-chip fb-module-chip" data-module="家电">家电</button>
+                <button type="button" class="module-chip fb-module-chip" data-module="修护">修护</button>
+                <button type="button" class="module-chip fb-module-chip" data-module="洗车">洗车</button>
+                <button type="button" class="module-chip fb-module-chip" data-module="餐饮">餐饮</button>
+              </div>
+            </div>
+            <div>
+              <div class="small" style="margin-bottom:8px;">本次支付金额</div>
+              <input class="input" id="fbPayAmount" readonly>
+            </div>
+          </div>
+
+          <div class="section-title">监督项</div>
+          <div class="check-grid">
+            <label class="check-item"><input type="checkbox" class="fb-check" value="1" data-text="到店顺利，无额外阻碍"><div><div style="font-weight:700;">到店顺利</div><div class="small">商户认识流程，不需要用户反复解释。</div></div></label>
+            <label class="check-item"><input type="checkbox" class="fb-check" value="1" data-text="现场价格透明，没有临时加价"><div><div style="font-weight:700;">价格透明</div><div class="small">没有强推项目，也没有临时加价。</div></div></label>
+            <label class="check-item"><input type="checkbox" class="fb-check" value="1" data-text="服务态度正常，体验可接受"><div><div style="font-weight:700;">服务态度</div><div class="small">店员态度、沟通、处理方式是否正常。</div></div></label>
+            <label class="check-item"><input type="checkbox" class="fb-check" value="1" data-text="这家店值得继续推荐"><div><div style="font-weight:700;">是否值得继续推</div><div class="small">这是平台后续是否继续合作的重要参考。</div></div></label>
+          </div>
+
+          <div class="section-title">补充评价</div>
+          <div class="card stack">
+            <textarea class="textarea" id="fbComment" placeholder="例如：整体顺利，但洗护项目略有推销；或者：价格清楚、手法不错，愿意再来。"></textarea>
+            <div class="line"><span class="label">当前得分</span><strong id="fbScore">0 / 4</strong></div>
+          </div>
+
+          <div class="section-title">自动生成反馈文案</div>
+          <div class="card small" id="fbTemplate">等待勾选监督项后生成反馈文案。</div>
+        </div>
+        <div class="dock">
+          <div class="dual-btn">
+            <button class="btn-secondary" id="copyFbBtn">复制反馈文案</button>
+            <button class="btn-primary" id="submitFbBtn">提交监督反馈</button>
+          </div>
+        </div>
+      </div></div></div>
+    </section>
+
+    <section class="view" id="view-success">
+      <div class="gallery"><div class="phone"><div class="screen">
+        <div class="statusbar"></div>
+        <div class="nav"><span class="nav-btn ghost-link" data-go="verify">返回</span><span class="title">结果页</span><span>完成</span></div>
+        <div class="success">
           <div>
-            <div class="bg-orange-500 text-white px-6 py-4 rounded-t-xl">
-              <h3 class="font-bold text-lg">商户执行口径卡（简版）</h3>
-              <p class="text-orange-100 text-sm opacity-90">原则：结算时出卡/报码 → 按折扣结算</p>
+            <div class="circle" id="successIcon">✓</div>
+            <div style="font-size:28px;font-weight:800;margin-bottom:16px;" id="successTitle">等待核销</div>
+            <div class="result-card list" style="min-width:280px;margin:0 auto;text-align:left;">
+              <div class="line"><span class="label">门店</span><strong id="successMerchant">--</strong></div>
+              <div class="line"><span class="label">消费项目</span><strong id="successService">--</strong></div>
+              <div class="line"><span class="label">本次消费</span><strong id="successPrice">--</strong></div>
+              <div class="line"><span class="label">补贴抵扣</span><strong id="successDiscount" style="color:var(--primary);">--</strong></div>
+              <div class="line"><span class="label">用户实付</span><strong id="successPay">--</strong></div>
             </div>
-
-            <div class="bg-white border-x border-b border-slate-200 rounded-b-xl p-6 shadow-sm">
-              <h4 class="font-bold text-slate-700 mb-4 border-l-4 border-orange-500 pl-3">标准收银动作 (只需做一件事)</h4>
-
-              <div class="space-y-4">
-                <div class="flex items-start gap-4 p-3 rounded-lg border border-slate-100 bg-slate-50">
-                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <div class="font-medium text-slate-800">服务完成，准备收款时</div>
-                    <div class="text-sm text-slate-500">按门店正常报价流程执行，得出实际结算价/会员价。</div>
-                  </div>
-                </div>
-
-                <div class="flex items-start gap-4 p-3 rounded-lg border border-slate-100 bg-slate-50">
-                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <div class="font-medium text-slate-800">客户出示查询结果</div>
-                    <div class="text-sm text-slate-500">用户展示【权益中心】状态页面。</div>
-                  </div>
-                </div>
-
-                <div class="flex items-start gap-4 p-3 rounded-lg border border-slate-100 bg-slate-50">
-                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <div class="font-medium text-slate-800">核对关键信息</div>
-                    <div class="text-sm text-slate-600 mt-1">
-                      ① 状态显示为 <span class="text-green-600 font-bold bg-green-50 px-1 rounded">有效</span><br>
-                      ② 手机尾号与顾客报备一致（仅后四位）
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex items-start gap-4 p-3 rounded-lg border border-orange-200 bg-orange-50 shadow-sm">
-                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <div class="font-medium text-orange-800">按对应折扣结算</div>
-                    <div class="text-sm text-orange-700 mt-1 font-mono bg-white px-2 py-1 rounded inline-block border border-orange-100">
-                      理发 0.98 | 家政 0.97 | 家电 0.95
-                    </div>
-                    <div class="text-xs text-orange-600 mt-2 font-bold">💡 推荐：折后价向下取整到“元”（更好执行，更少争议）</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-              <h4 class="font-bold text-slate-700 mb-3 flex items-center gap-2"><span>🛡️</span> 异常处理口径 (统一)</h4>
-              <ul class="space-y-3 text-sm text-slate-600">
-                <li class="flex items-start gap-2">
-                  <span class="text-red-500 mt-0.5">▪</span>
-                  <span>若显示“无效”或手机号尾号对不上：<strong>不享受折扣</strong>，按门店原价结算。</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-blue-500 mt-0.5">▪</span>
-                  <span>如用户有疑问：让用户<strong>回群联系管理员核对</strong>（门店无需解释）。</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="bg-slate-800 text-slate-200 p-6 rounded-xl shadow-sm">
-              <h4 class="font-bold text-white mb-2">📌 业务逻辑说明</h4>
-              <p class="text-sm leading-relaxed text-slate-300">
-                不在商户口径里强调“先确认价格/禁止涨价”，而是通过“结算时才出卡”的动作隔离，
-                配合用户打分，决定是否继续合作与继续引流。
-              </p>
-            </div>
+            <div class="small" id="successHint" style="margin-top:14px;">核销完成后，这里会显示本次结果，并引导进入监督反馈。</div>
           </div>
         </div>
-      </section>
-
-      <!-- Section 4: Feedback -->
-      <section id="feedback" class="tab-content hidden animate-fade-in">
-        <header class="mb-8">
-          <h2 class="text-3xl font-bold text-slate-800 mb-2">监督端：用户反馈机制</h2>
-          <p class="text-slate-600 leading-relaxed">将主观评价转化为客观的 4 项指标（事实确认），评分将直接决定后续引流资源分配。</p>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-green-600 px-6 py-4">
-              <h3 class="font-bold text-white text-lg">用户监督清单卡模拟</h3>
-              <p class="text-green-100 text-sm">目的：筛选优质商户 | 差的直接淘汰</p>
-            </div>
-
-            <div class="p-6">
-              <p class="text-sm text-slate-600 mb-4 font-medium border-b border-slate-100 pb-3">
-                一句话原则：服务结束再结算出卡打折；你只需记录是否临时加价 & 服务是否达标。
-              </p>
-
-              <h4 class="font-bold text-slate-700 mb-3">监督四项 (每项打勾得1分)</h4>
-              <div class="space-y-3 mb-6" id="checkboxGroup">
-                <label class="flex items-start gap-3 p-3 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200 transition-colors">
-                  <input type="checkbox" class="feedback-cb mt-1 w-4 h-4 text-green-600 rounded border-slate-300 focus:ring-green-500" value="1">
-                  <div>
-                    <div class="font-medium text-slate-800 text-sm">报价清晰</div>
-                    <div class="text-xs text-slate-500">服务前明码标价，无模糊、隐形消费。</div>
-                  </div>
-                </label>
-
-                <label class="flex items-start gap-3 p-3 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200 transition-colors">
-                  <input type="checkbox" class="feedback-cb mt-1 w-4 h-4 text-green-600 rounded border-slate-300 focus:ring-green-500" value="1">
-                  <div>
-                    <div class="font-medium text-slate-800 text-sm">无临时加价</div>
-                    <div class="text-xs text-slate-500">服务过程中未突然加价/加项。</div>
-                  </div>
-                </label>
-
-                <label class="flex items-start gap-3 p-3 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200 transition-colors">
-                  <input type="checkbox" class="feedback-cb mt-1 w-4 h-4 text-green-600 rounded border-slate-300 focus:ring-green-500" value="1">
-                  <div>
-                    <div class="font-medium text-slate-800 text-sm">配合结算</div>
-                    <div class="text-xs text-slate-500">沟通正常、无推诿，按折结算。</div>
-                  </div>
-                </label>
-
-                <label class="flex items-start gap-3 p-3 rounded hover:bg-slate-50 cursor-pointer border border-transparent hover:border-slate-200 transition-colors">
-                  <input type="checkbox" class="feedback-cb mt-1 w-4 h-4 text-green-600 rounded border-slate-300 focus:ring-green-500" value="1">
-                  <div>
-                    <div class="font-medium text-slate-800 text-sm">结果达标</div>
-                    <div class="text-xs text-slate-500">效果/质量符合预期。</div>
-                  </div>
-                </label>
-              </div>
-
-              <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                <div class="flex justify-between items-center mb-2">
-                  <h4 class="font-bold text-slate-700 text-sm">实时生成反馈文案</h4>
-                  <span id="scoreDisplay" class="px-2 py-1 bg-slate-200 text-slate-700 rounded text-xs font-bold">得 0 分</span>
-                </div>
-
-                <textarea id="feedbackTextarea" readonly class="w-full h-32 p-3 text-sm border border-slate-300 rounded-md bg-white text-slate-600 focus:outline-none resize-none font-mono">【权益卡·服务反馈】
-📍 门店名称：______
-🛠️ 服务项目：______
-💰 结算总价：______
-🚫 临时加价：有/无 (___)
-⭐ 综合评分：0 分
-💬 一句话点评：______</textarea>
-
-                <button onclick="copyFeedback(event)" class="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium">📋 复制模板去群内反馈</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
-            <h3 class="font-bold text-slate-700 mb-2">系统处理逻辑建模</h3>
-            <p class="text-sm text-slate-500 mb-6">展示不同评分档位对商户后续“平台引流资源”的直接影响。</p>
-
-            <div class="chart-container flex-1">
-              <canvas id="scoringImpactChart"></canvas>
-            </div>
-
-            <div class="mt-4 grid grid-cols-3 gap-2 text-center text-xs">
-              <div class="bg-red-50 text-red-700 p-2 rounded"><strong>0-1分:</strong> 淘汰<br>不再推荐</div>
-              <div class="bg-yellow-50 text-yellow-700 p-2 rounded"><strong>2-3分:</strong> 观察<br>暂不加码</div>
-              <div class="bg-green-50 text-green-700 p-2 rounded"><strong>4分:</strong> 推荐<br>重点引流</div>
-            </div>
+        <div class="dock">
+          <div class="dual-btn">
+            <button class="btn-secondary nav-btn" data-go="home">返回首页</button>
+            <button class="btn-primary nav-btn" data-go="feedback">去做监督反馈</button>
           </div>
         </div>
-      </section>
-
-    </main>
+      </div></div></div>
+    </section>
   </div>
 
+  <div id="toast" class="toast"></div>
+
   <script>
-    // ===== Config（每月只改这里）=====
-    const MONTH_CODE = "MAR-7K3A";        // 当月权益码（每月更新）
-    const DEMO_VALID_TAIL = "1234";       // 演示：尾号1234为有效
-    const DEMO_CARD_NO = "2603-0001";     // 演示卡号
+    const STORE_KEY = 'life_card_front_trial_v2';
 
-    // --- Navigation Logic ---
-    function switchTab(tabId, btnElement) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(el => {
-        el.classList.remove('tab-active');
-        el.classList.add('text-slate-600');
-      });
-
-      document.getElementById(tabId).classList.remove('hidden');
-      if (btnElement) {
-        btnElement.classList.add('tab-active');
-        btnElement.classList.remove('text-slate-600');
+    const merchants = {
+      xingyi: {
+        name:'星艺造型',
+        mapUrl:'https://map.qq.com/?type=poi&keyword=' + encodeURIComponent('星艺造型'), distance:'距离1.2km', phone:'138****8888', address:'xx市xx区xx路xx号', hours:'09:00 - 21:00', hero:'linear-gradient(135deg,#e7d6c6,#f4ebe1)',
+        tags:['支持权益卡','支持首购补贴','会员待遇可用','消费后需反馈'],
+        hint:'先给用户真实优惠，再看门店服务值不值。用户消费后需要监督反馈，平台会据此决定是否继续推流。',
+        rules:['价格透明，不现场乱加项目。','用户到店能直接核验补贴，不让用户来回解释。','消费后愿意接受用户监督反馈。'],
+        services:[{key:'haircut', name:'理发', price:40, discount:15},{key:'wash', name:'洗护', price:68, discount:20}]
+      },
+      repair: {
+        name:'快修工坊',
+        mapUrl:'https://map.qq.com/?type=poi&keyword=' + encodeURIComponent('快修工坊'), distance:'距离2.3km', phone:'139****5566', address:'xx市xx区维修街18号', hours:'10:00 - 20:30', hero:'linear-gradient(135deg,#d9e8ff,#edf5ff)',
+        tags:['家电电脑维修','支持权益卡','检测补贴','消费后需反馈'],
+        hint:'维修类项目最怕临时加价，所以这家店的重点不是便宜，而是报价透明、现场解释清楚。',
+        rules:['先检测再报价，不先拆后说。','更换项目需先和用户确认。','消费后必须接受用户反馈。'],
+        services:[{key:'check', name:'检测服务', price:50, discount:20},{key:'clean', name:'清灰保养', price:79, discount:20}]
+      },
+      homecare: {
+        name:'安心家政', distance:'距离1.6km', phone:'136****2233', address:'xx市xx区安居巷12号', hours:'08:30 - 19:30', hero:'linear-gradient(135deg,#ffe8cf,#fff4e7)',
+        tags:['家政保洁','支持权益卡','上门服务','消费后需反馈'],
+        hint:'家政类项目最怕临时加项和服务缩水，所以更适合通过真实反馈来筛选是否继续推荐。',
+        rules:['上门前先说清服务范围和时长。','额外加项必须先告知用户。','完成后引导用户马上反馈。'],
+        services:[{key:'clean', name:'基础保洁', price:99, discount:20},{key:'deepclean', name:'深度清洁', price:168, discount:30}]
+      },
+      dining: {
+        name:'邻里小厨',
+        mapUrl:'https://map.qq.com/?type=poi&keyword=' + encodeURIComponent('邻里小厨'), distance:'距离900m', phone:'135****6611', address:'xx市xx区邻里街8号', hours:'10:30 - 21:30', hero:'linear-gradient(135deg,#ffe5cf,#fff1e5)',
+        tags:['社区餐饮','支持权益卡','首单试吃','消费后需反馈'],
+        hint:'餐饮类更适合试用户感知：补贴是否直接、分量是否真实、到店体验是否顺畅，一吃就知道。',
+        rules:['点单前先说明可用补贴。','不临时抬价，不模糊套餐。','消费完成后引导用户马上反馈。'],
+        services:[{key:'meal', name:'到店套餐', price:35, discount:10},{key:'meal2', name:'双人简餐', price:68, discount:15}]
+      },
+      carwash: {
+        name:'泡泡洗车',
+        mapUrl:'https://map.qq.com/?type=poi&keyword=' + encodeURIComponent('泡泡洗车'), distance:'距离1.8km', phone:'137****1122', address:'xx市xx区车享路6号', hours:'08:30 - 20:00', hero:'linear-gradient(135deg,#dcebdc,#eef8ee)',
+        tags:['洗车','首购可用','到店即核销','消费后需反馈'],
+        hint:'洗车项目最适合试运营：流程短、体验直接、用户感知强，做完马上能收反馈。',
+        rules:['补贴项目写清楚，不做模糊套餐。','洗前洗后能让用户直观看到差异。','核销后马上引导反馈。'],
+        services:[{key:'wash', name:'精洗', price:39, discount:10},{key:'wax', name:'打蜡', price:99, discount:20}]
       }
+    };
 
-      if (tabId === 'feedback' && !window.chartInitialized) {
-        initChart();
-        window.chartInitialized = true;
+    const users = {
+      '1234': { phone:'138****1234', cardNo:'LK-000128', active:true, dailyUsed:false },
+      '8888': { phone:'138****8888', cardNo:'LK-000512', active:true, dailyUsed:true },
+      '0000': { phone:'138****0000', cardNo:'LK-009901', active:false, dailyUsed:false }
+    };
+
+    const photoRules = {
+      oil:{name:'食用油照片',reward:5},
+      soy:{name:'调味/酱油照片',reward:5},
+      salt:{name:'食用盐照片',reward:5}
+    };
+
+    const defaultState = {
+      photoHistory:[],
+      writeoffs:[],
+      feedbacks:[],
+      lastWriteoff:null,
+      selectedMerchant:'xingyi',
+      merchantPhotos:{},
+      selectedModule:'hair',
+      activatedCards:{}
+    };
+
+    const state = loadState();
+    const moduleMerchantMap = {
+      hair:'xingyi',
+      care:'xingyi',
+      appliance:'repair',
+      repair:'repair',
+      carwash:'carwash',
+      dining:'dining'
+    };
+
+    const tabs = document.querySelectorAll('.tab');
+    const views = document.querySelectorAll('.view');
+    tabs.forEach(tab => tab.addEventListener('click', () => showView(tab.dataset.view)));
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => showView(btn.dataset.go)));
+    document.getElementById('homeModuleSelect').addEventListener('change', (e)=>setHomeModule(e.target.value));
+    document.getElementById('homeSampleMerchantBtn').addEventListener('click', ()=>openMerchantDetail(state.selectedMerchant));
+    document.getElementById('homeMapOpenBtn').addEventListener('click', ()=>{
+      openMerchantMap(state.selectedMerchant);
+      toast(`正在打开 ${getSelectedMerchant().name} 的地图`);
+    });
+    function openMerchantMap(key){
+      const m = merchants[key] || merchants.xingyi;
+      const url = m.mapUrl || ('https://map.qq.com/?type=poi&keyword=' + encodeURIComponent((m.name || '') + ' ' + (m.address || '')));
+      window.open(url, '_blank');
+    }
+    const featuredCard = document.getElementById('homeFeaturedCard');
+    featuredCard.addEventListener('click', ()=>openMerchantMap(state.selectedMerchant));
+    featuredCard.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        openMerchantMap(state.selectedMerchant);
       }
+    });
+    document.getElementById('activateCardBtn').addEventListener('click', activateCard);
+
+    function showView(name){
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.view === name));
+      views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+      if(name === 'feedback') syncFeedbackForm();
+      if(name === 'verify') renderTodayWriteoffs();
+      if(name === 'success') syncSuccess();
+      if(name === 'merchant-detail') renderMerchantDetail();
+      window.scrollTo({top:0, behavior:'smooth'});
     }
 
-    // --- User Hub Simulator Logic ---
-    function checkUserStatus() {
-      const input = document.getElementById('phoneInput').value.trim();
-      const resultArea = document.getElementById('statusResult');
-      const badge = document.getElementById('statusBadge');
-      const tailElement = document.getElementById('tailNumber');
-      const codeArea = document.getElementById('codeArea');
-      const cardRow = document.getElementById('cardNumberRow');
-      const cardNo = document.getElementById('cardNumber');
-      const monthCodeEl = document.getElementById('monthCode');
+    function toast(msg){
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(()=>el.classList.remove('show'), 2200);
+    }
 
-      if (input.length !== 11) {
-        alert('请输入完整的11位手机号');
+    function loadState(){
+      try{
+        return Object.assign({}, defaultState, JSON.parse(localStorage.getItem(STORE_KEY) || '{}'));
+      }catch(e){
+        return JSON.parse(JSON.stringify(defaultState));
+      }
+    }
+    function saveState(){
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    }
+
+    function formatMoney(n){ return '¥' + Number(n).toFixed(0); }
+
+    function isCardActivated(phone4){
+      return !!(state.activatedCards && state.activatedCards[phone4]);
+    }
+
+    function activateCard(){
+      const phone4 = document.getElementById('activatePhone4').value.trim();
+      const cardType = document.getElementById('activateCardType').value;
+      const agree = document.getElementById('activateAgree').checked;
+      const result = document.getElementById('activateCardResult');
+      if(!/^\d{4}$/.test(phone4)){
+        result.textContent = '请输入正确的手机号后四位。';
+        toast('请先输入手机号后四位');
         return;
       }
-
-      const tail = input.slice(-4);
-      tailElement.textContent = '****' + tail;
-      resultArea.classList.remove('hidden');
-
-      if (tail === DEMO_VALID_TAIL) {
-        badge.textContent = '状态：有效';
-        badge.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 bg-green-100 text-green-700 border border-green-200';
-        resultArea.className = 'rounded-lg p-4 text-center transition-all bg-green-50 border border-green-100 mt-4';
-        monthCodeEl.textContent = MONTH_CODE;
-        codeArea.classList.remove('hidden');
-
-        cardRow.classList.remove('hidden');
-        cardNo.textContent = DEMO_CARD_NO;
-      } else {
-        badge.textContent = '状态：无效 / 未达标';
-        badge.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 bg-red-100 text-red-700 border border-red-200';
-        resultArea.className = 'rounded-lg p-4 text-center transition-all bg-red-50 border border-red-100 mt-4';
-        codeArea.classList.add('hidden');
-
-        cardRow.classList.add('hidden');
+      if(!agree){
+        result.textContent = '请先勾选确认权益卡。';
+        toast('请先勾选确认项');
+        return;
       }
+      state.activatedCards[phone4] = {cardType, at: Date.now()};
+      const user = users[phone4];
+      if(user) user.active = true;
+      saveState();
+      result.textContent = `已确认开通：尾号${phone4}（${cardType === 'life' ? '生活权益卡' : '门店会员权益卡'}）`; 
+      toast('权益卡已确认开通');
     }
 
-    // --- Feedback Generator Logic ---
-    const checkboxes = document.querySelectorAll('.feedback-cb');
-    const textarea = document.getElementById('feedbackTextarea');
-    const scoreDisplay = document.getElementById('scoreDisplay');
+    function getSelectedMerchant(){ return merchants[state.selectedMerchant] || merchants.xingyi; }
 
-    checkboxes.forEach(cb => cb.addEventListener('change', updateFeedbackTemplate));
-
-    function updateFeedbackTemplate() {
-      let score = 0;
-      checkboxes.forEach(cb => { if (cb.checked) score += parseInt(cb.value); });
-
-      let consequence = "";
-      let colorClass = "bg-slate-200 text-slate-700";
-      if (score === 4) {
-        consequence = "强烈推荐";
-        colorClass = "bg-green-100 text-green-700";
-      } else if (score >= 2) {
-        consequence = "观察试用";
-        colorClass = "bg-yellow-100 text-yellow-700";
-      } else {
-        consequence = "建议淘汰";
-        colorClass = "bg-red-100 text-red-700";
-      }
-
-      scoreDisplay.textContent = `得 ${score} 分 (${consequence})`;
-      scoreDisplay.className = `px-2 py-1 rounded text-xs font-bold transition-colors ${colorClass}`;
-
-      const template = `【权益卡·服务反馈】
-📍 门店名称：______
-🛠️ 服务项目：______
-💰 结算总价：______
-🚫 临时加价：${checkboxes[1].checked ? '无' : '有 (___元)'}
-⭐ 综合评分：${score} 分
-💬 一句话点评：______`;
-
-      textarea.value = template;
+    function openMerchantDetail(key){
+      state.selectedMerchant = key;
+      saveState();
+      renderMerchantDetail();
+      showView('merchant-detail');
     }
 
-    function copyFeedback(ev) {
-      textarea.select();
-      document.execCommand('copy');
-
-      const btn = ev.target;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '✅ 已复制';
-      btn.classList.add('text-green-600');
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.classList.remove('text-green-600');
-      }, 1600);
+    function renderHomeFeatured(){
+      const m = getSelectedMerchant();
+      const serviceMap = { hair:'haircut', care:'wash', appliance:'check', repair:'check', carwash:'wash', dining:'meal' };
+      const desired = serviceMap[state.selectedModule];
+      const matched = m.services.find(s=>s.key === desired) || m.services[0];
+      const titleMap = { hair:'理发模块', care:'修护模块', appliance:'家电模块', repair:'维修模块', carwash:'洗车模块', dining:'餐饮模块' };
+      document.getElementById('homeFeaturedName').textContent = `${m.name}`;
+      document.getElementById('homeFeaturedThumb').style.background = m.hero;
+      document.getElementById('homeFeaturedTags').innerHTML = m.tags.slice(0,3).map((t,i)=>`<span class="tag ${i===0?'green':i===1?'blue':'gold'}">${t}</span>`).join('');
+      document.getElementById('homeFeaturedOffer').textContent = `${matched.name}${matched.price}补${matched.discount}`;
+      document.getElementById('homeFeaturedDesc').textContent = `${titleMap[state.selectedModule] || '当前模块'} · ${m.hint}`;
     }
 
-    // --- Chart.js Visualization Logic ---
-    function initChart() {
-      const ctx = document.getElementById('scoringImpactChart').getContext('2d');
+    function setHomeModule(module){
+      const key = moduleMerchantMap[module] || 'xingyi';
+      state.selectedMerchant = key;
+      state.selectedModule = module;
+      saveState();
+      document.getElementById('homeModuleSelect').value = module;
+      renderHomeFeatured();
+    }
 
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['0-1分 (淘汰)', '2-3分 (观察)', '4分 (推荐)'],
-          datasets: [{
-            label: '预估商户引流权重分配 (%)',
-            data: [0, 30, 100],
-            backgroundColor: [
-              'rgba(239, 68, 68, 0.7)',
-              'rgba(245, 158, 11, 0.7)',
-              'rgba(34, 197, 94, 0.7)'
-            ],
-            borderColor: [
-              'rgb(239, 68, 68)',
-              'rgb(245, 158, 11)',
-              'rgb(34, 197, 94)'
-            ],
-            borderWidth: 1,
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  const labels = [
-                    ' 停止合作，社群预警',
-                    ' 维持现状，暂不增加推荐',
-                    ' 重点引流，分配 100% 资源'
-                  ];
-                  return labels[context.dataIndex];
-                }
-              }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              title: { display: true, text: '引流权重指标', color: '#64748b' },
-              ticks: { callback: function(value) { return value + '%'; } }
-            },
-            x: {
-              grid: { display: false },
-              ticks: { color: '#475569', font: { weight: 'bold' } }
-            }
-          },
-          animation: { duration: 1200, easing: 'easeOutQuart' }
-        }
+    function renderMerchantDetail(){
+      const m = getSelectedMerchant();
+      document.getElementById('detailName').textContent = m.name;
+      document.getElementById('detailMeta').textContent = `社区首批合作商户 · ${m.distance}`;
+      document.getElementById('detailHero').style.background = m.hero;
+      document.getElementById('detailHint').textContent = m.hint;
+      document.getElementById('detailTags').innerHTML = m.tags.map((t,i)=>`<span class="tag ${i===0?'green':i===1?'blue':i===2?'gold':'red'}">${t}</span>`).join('');
+      document.getElementById('detailServices').innerHTML = m.services.map(s=>`<div style="font-weight:700;">${s.name}消费${s.price}元，<span style="color:var(--primary);">补贴${s.discount}元</span></div>`).join('') + '<div class="small">首期试运营只做简单、直接、用户能看懂的补贴，不做花活。</div>';
+      document.getElementById('detailRules').innerHTML = m.rules.map((r,i)=>`<div class="step"><div class="num">${i+1}</div><div class="small">${r}</div></div>`).join('');
+      document.getElementById('detailInfo').innerHTML = `<div><strong style="color:var(--text);">联系电话：</strong>${m.phone}</div><div><strong style="color:var(--text);">门店地址：</strong>${m.address}</div><div><strong style="color:var(--text);">营业时间：</strong>${m.hours}</div>`;
+      renderMerchantPhotoBoxes();
+    }
+
+    function renderMerchantPhotoBoxes(){
+      const photos = state.merchantPhotos[state.selectedMerchant] || {};
+      renderOnePhotoBox('storefrontPreview', photos.storefront, '未上传门头照片');
+      renderOnePhotoBox('introPreview', photos.intro, '未上传业务介绍照片');
+    }
+
+    function renderOnePhotoBox(id, dataUrl, emptyText){
+      const box = document.getElementById(id);
+      if(dataUrl){ box.innerHTML = `<img src="${dataUrl}" alt="预览"/>`; }
+      else { box.textContent = emptyText; }
+    }
+
+    function bindMerchantPhotoUpload(inputId, type){
+      document.getElementById(inputId).addEventListener('change', (e)=>{
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = ()=>{
+          const obj = state.merchantPhotos[state.selectedMerchant] || {};
+          obj[type] = reader.result;
+          state.merchantPhotos[state.selectedMerchant] = obj;
+          saveState();
+          renderMerchantPhotoBoxes();
+          toast(type === 'storefront' ? '门头照片已更新' : '业务介绍照片已更新');
+        };
+        reader.readAsDataURL(file);
       });
     }
 
-    // Fade-in animation
-    document.head.insertAdjacentHTML('beforeend',
-      '<style>.animate-fade-in{animation:fadeIn .35s ease-out forwards;}@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}</style>'
-    );
+    document.addEventListener('click', (e)=>{
+      const opener = e.target.closest('.merchant-open,.merchant-entry');
+      if(opener && opener.dataset.merchant){ openMerchantDetail(opener.dataset.merchant); }
+    });
+
+    document.getElementById('callBtn').addEventListener('click', ()=>toast(`演示版：这里可直接拨打 ${getSelectedMerchant().name} 电话`));
+    document.getElementById('consumeBtn').addEventListener('click', ()=>{
+      openMerchantMap(state.selectedMerchant);
+      toast(`正在打开 ${getSelectedMerchant().name} 的地图`);
+    });
+
+    function initMerchantControls(){
+      const merchantSelect = document.getElementById('merchantSelect');
+      merchantSelect.innerHTML = Object.entries(merchants).map(([key,m])=>`<option value="${key}">${m.name}</option>`).join('');
+      merchantSelect.addEventListener('change', renderServiceOptions);
+      document.getElementById('serviceSelect').addEventListener('change', syncPriceBox);
+      renderServiceOptions();
+    }
+    function renderServiceOptions(){
+      const merchantKey = document.getElementById('merchantSelect').value;
+      const serviceSelect = document.getElementById('serviceSelect');
+      serviceSelect.innerHTML = merchants[merchantKey].services.map((s,i)=>`<option value="${i}">${s.name}</option>`).join('');
+      syncPriceBox();
+    }
+    function currentService(){
+      const merchantKey = document.getElementById('merchantSelect').value;
+      const idx = Number(document.getElementById('serviceSelect').value || 0);
+      return { merchantKey, merchant: merchants[merchantKey], service: merchants[merchantKey].services[idx] };
+    }
+    function syncPriceBox(){
+      const {service} = currentService();
+      document.getElementById('priceText').textContent = formatMoney(service.price);
+      document.getElementById('discountText').textContent = formatMoney(service.discount);
+      document.getElementById('payText').textContent = formatMoney(service.price - service.discount);
+    }
+
+    function todayKey(){ return new Date().toISOString().slice(0,10); }
+
+    function verifyCurrent(){
+      const phone4 = document.getElementById('verifyPhoneInput').value.trim();
+      const resultEl = document.getElementById('verifyResult');
+      const {merchantKey, merchant, service} = currentService();
+      if(!/^\d{4}$/.test(phone4)){
+        return {ok:false, message:'请输入正确的手机号后四位。'};
+      }
+      const user = users[phone4];
+      if(!user && !isCardActivated(phone4)){
+        return {ok:false, message:'未找到该用户，说明此手机号后四位暂未确认开通权益卡。请先在首页完成开通确认。'};
+      }
+      if(user && !user.active && !isCardActivated(phone4)){
+        return {ok:false, message:'该用户权益卡当前未开通或已失效，请先回首页确认开通。', user, merchant, service};
+      }
+      const todayUsed = state.writeoffs.some(item => item.date === todayKey() && item.phone4 === phone4);
+      if(todayUsed || user.dailyUsed){
+        return {ok:false, message:'该用户今日已使用过一次权益，当前规则下今天不能重复核销。', user, merchant, service};
+      }
+      return {
+        ok:true,
+        message:`核验通过：${user.phone} 可在 ${merchant.name} 使用 ${service.name}，本次补贴 ${formatMoney(service.discount)}，预计实付 ${formatMoney(service.price - service.discount)}。`,
+        user, merchant, service, phone4
+      };
+    }
+
+    document.getElementById('verifyBtn').addEventListener('click', ()=>{
+      const res = verifyCurrent();
+      const el = document.getElementById('verifyResult');
+      el.className = 'result-card small' + (res.ok ? '' : '');
+      el.innerHTML = res.message;
+      toast(res.ok ? '核验通过，可继续核销' : '核验未通过');
+    });
+
+    document.getElementById('writeoffBtn').addEventListener('click', ()=>{
+      const res = verifyCurrent();
+      const el = document.getElementById('verifyResult');
+      if(!res.ok){
+        el.textContent = res.message;
+        toast('请先通过核验');
+        return;
+      }
+      const record = {
+        id: 'W' + Date.now(),
+        date: todayKey(),
+        time: new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}),
+        phone4: res.phone4,
+        merchant: res.merchant.name,
+        service: res.service.name,
+        price: res.service.price,
+        discount: res.service.discount,
+        pay: res.service.price - res.service.discount
+      };
+      state.writeoffs.unshift(record);
+      state.lastWriteoff = record;
+      saveState();
+      renderTodayWriteoffs();
+      syncSuccess();
+      syncFeedbackForm();
+      toast('核销成功，已进入结果页');
+      showView('success');
+    });
+
+    function renderTodayWriteoffs(){
+      const list = document.getElementById('todayWriteoff');
+      const items = state.writeoffs.filter(item => item.date === todayKey()).slice(0,4);
+      if(!items.length){
+        list.innerHTML = '<div class="empty">今天还没有核销记录。</div>';
+        return;
+      }
+      list.innerHTML = items.map(item => `
+        <div class="record small">
+          <div style="font-weight:700;color:var(--text);margin-bottom:6px;">${item.merchant} · ${item.service}</div>
+          <div>手机号后四位：${item.phone4}</div>
+          <div>时间：${item.time}</div>
+          <div>消费：${formatMoney(item.price)}　补贴：${formatMoney(item.discount)}　实付：${formatMoney(item.pay)}</div>
+        </div>`).join('');
+    }
+
+    function syncSuccess(){
+      const item = state.lastWriteoff;
+      const ok = !!item;
+      document.getElementById('successTitle').textContent = ok ? '核销成功' : '等待核销';
+      document.getElementById('successMerchant').textContent = ok ? item.merchant : '--';
+      document.getElementById('successService').textContent = ok ? item.service : '--';
+      document.getElementById('successPrice').textContent = ok ? formatMoney(item.price) : '--';
+      document.getElementById('successDiscount').textContent = ok ? formatMoney(item.discount) : '--';
+      document.getElementById('successPay').textContent = ok ? formatMoney(item.pay) : '--';
+      document.getElementById('successHint').textContent = ok
+        ? '这一步别停。试运营最关键的是：消费结束后，把真实体验反馈回来。'
+        : '核销完成后，这里会显示本次结果，并引导进入监督反馈。';
+    }
+
+    function setFeedbackModule(moduleName){
+      const input = document.getElementById('fbService');
+      input.value = moduleName || '';
+      document.querySelectorAll('.fb-module-chip').forEach(btn=>{
+        btn.classList.toggle('active', btn.dataset.module === moduleName);
+      });
+      updateFeedbackTemplate();
+    }
+
+    function guessModule(service){
+      const s = (service || '').trim();
+      if(!s) return '';
+      if(/理发|剪发|洗护|造型/.test(s)) return '理发';
+      if(/维修|修车|快修/.test(s)) return '维修';
+      if(/家电|清洗家电|空调|冰箱|洗衣机/.test(s)) return '家电';
+      if(/修护|美容|护理|美甲/.test(s)) return '修护';
+      if(/洗车|精洗|打蜡/.test(s)) return '洗车';
+      if(/餐|小厨|套餐|简餐|堂食|餐饮/.test(s)) return '餐饮';
+      if(/保洁|清洁|家政/.test(s)) return '保洁';
+      return s;
+    }
+
+    function syncFeedbackForm(){
+      const item = state.lastWriteoff;
+      document.getElementById('fbMerchant').value = item ? item.merchant : '';
+      document.getElementById('fbPayAmount').value = item ? formatMoney(item.pay) : '';
+      setFeedbackModule(item ? guessModule(item.service) : '');
+      updateFeedbackTemplate();
+    }
+
+    document.querySelectorAll('.fb-check').forEach(el => el.addEventListener('change', updateFeedbackTemplate));
+    document.getElementById('fbComment').addEventListener('input', updateFeedbackTemplate);
+    document.querySelectorAll('.fb-module-chip').forEach(btn=>btn.addEventListener('click', ()=>setFeedbackModule(btn.dataset.module)));
+
+    function updateFeedbackTemplate(){
+      const checks = [...document.querySelectorAll('.fb-check:checked')];
+      const score = checks.length;
+      document.getElementById('fbScore').textContent = `${score} / 4`;
+      const merchant = document.getElementById('fbMerchant').value || '本次门店';
+      const service = document.getElementById('fbService').value || '消费项目';
+      const pay = document.getElementById('fbPayAmount').value || '本次支付金额';
+      const selectedText = checks.map(c => c.dataset.text);
+      const comment = document.getElementById('fbComment').value.trim();
+      let level = '建议观察';
+      if(score >= 4) level = '值得继续推';
+      else if(score >= 3) level = '可继续观察合作';
+      else if(score >= 2) level = '谨慎继续推';
+      else level = '建议暂停重点引流';
+      let tpl = `【消费反馈】\n门店：${merchant}\n项目：${service}\n实付：${pay}\n得分：${score}/4\n判断：${level}\n`;
+      if(selectedText.length) tpl += `反馈：${selectedText.join('；')}\n`;
+      if(comment) tpl += `补充：${comment}\n`;
+      tpl += '备注：本次反馈将作为后续是否继续推荐该门店的重要依据。';
+      document.getElementById('fbTemplate').textContent = tpl;
+    }
+
+    document.getElementById('copyFbBtn').addEventListener('click', async ()=>{
+      const text = document.getElementById('fbTemplate').textContent;
+      try{
+        await navigator.clipboard.writeText(text);
+        toast('反馈文案已复制');
+      }catch(e){
+        toast('当前环境不支持自动复制');
+      }
+    });
+
+    document.getElementById('submitFbBtn').addEventListener('click', ()=>{
+      const item = state.lastWriteoff;
+      if(!item){
+        toast('请先完成一次核销，再提交反馈');
+        return;
+      }
+      const checks = [...document.querySelectorAll('.fb-check:checked')];
+      const feedback = {
+        id:'F' + Date.now(),
+        date: todayKey(),
+        merchant: item.merchant,
+        service: document.getElementById('fbService').value || guessModule(item.service) || item.service,
+        pay: item.pay,
+        score: checks.length,
+        tags: checks.map(c => c.dataset.text),
+        comment: document.getElementById('fbComment').value.trim()
+      };
+      state.feedbacks.unshift(feedback);
+      saveState();
+      toast('监督反馈已提交并留痕');
+      document.querySelectorAll('.fb-check').forEach(c => c.checked = false);
+      document.getElementById('fbComment').value = '';
+      updateFeedbackTemplate();
+      showView('home');
+    });
+
+    function initPhotoControls(){
+      const select = document.getElementById('photoTypeSelect');
+      select.innerHTML = Object.entries(photoRules).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');
+      const fileInput = document.getElementById('photoFileInput');
+      fileInput.addEventListener('change', handlePhotoPreview);
+      document.getElementById('photoRewardBtn').addEventListener('click', handlePhotoReward);
+      renderPhotoRewards();
+    }
+    function handlePhotoPreview(){
+      const file = document.getElementById('photoFileInput').files[0];
+      const box = document.getElementById('imagePreview');
+      if(!file){ box.classList.remove('active'); return; }
+      const url = URL.createObjectURL(file);
+      document.getElementById('previewImg').src = url;
+      document.getElementById('previewMeta').textContent = `文件名：${file.name}｜大小：${Math.round(file.size/1024)}KB`;
+      box.classList.add('active');
+    }
+    function fingerprint(file){ return `${file.name}_${file.size}_${file.lastModified}`; }
+    function renderPhotoRewards(){
+      const list = document.getElementById('photoRewardList');
+      const total = state.photoHistory.length;
+      const valid = state.photoHistory.filter(i => !i.duplicate).length;
+      const dup = state.photoHistory.filter(i => i.duplicate).length;
+      const amount = state.photoHistory.filter(i => !i.duplicate).reduce((s,i)=>s+i.reward,0);
+      document.getElementById('rewardToday').textContent = amount + '元';
+      document.getElementById('rewardTotal').textContent = total;
+      document.getElementById('rewardValid').textContent = valid;
+      document.getElementById('rewardDup').textContent = dup;
+      if(!state.photoHistory.length){
+        list.innerHTML = '<div class="empty">还没有照片补贴记录。</div>';
+        return;
+      }
+      list.innerHTML = state.photoHistory.slice().reverse().map(item => `
+        <div class="card small">
+          <div style="font-weight:700;color:var(--text);margin-bottom:6px;">${item.typeName}</div>
+          <div>文件：${item.fileName}</div>
+          <div>结果：${item.duplicate ? '重复照片，不补贴' : `补贴 ${item.reward}元`}</div>
+        </div>
+      `).join('');
+    }
+    function handlePhotoReward(){
+      const file = document.getElementById('photoFileInput').files[0];
+      const type = document.getElementById('photoTypeSelect').value;
+      const result = document.getElementById('photoRewardResult');
+      if(!file){
+        result.className = 'reward-box reward-no';
+        result.textContent = '请先选择或拍摄一张真实照片。';
+        return;
+      }
+      const fp = fingerprint(file);
+      const duplicate = state.photoHistory.some(item => item.fingerprint === fp);
+      const rule = photoRules[type];
+      const record = {
+        fingerprint: fp,
+        fileName: file.name,
+        type,
+        typeName: rule.name,
+        reward: duplicate ? 0 : rule.reward,
+        duplicate
+      };
+      state.photoHistory.push(record);
+      saveState();
+      if(duplicate){
+        result.className = 'reward-box reward-no';
+        result.textContent = `这张照片与已上传记录重复，本次不再补贴。`;
+      } else {
+        result.className = 'reward-box reward-ok';
+        result.textContent = `上传成功：${rule.name}，本次补贴 ${rule.reward} 元。`;
+      }
+      document.getElementById('photoFileInput').value = '';
+      document.getElementById('imagePreview').classList.remove('active');
+      renderPhotoRewards();
+      toast(duplicate ? '重复照片，不重复补贴' : '照片补贴已记录');
+    }
+
+    initMerchantControls();
+    initPhotoControls();
+    bindMerchantPhotoUpload('storefrontInput','storefront');
+    bindMerchantPhotoUpload('introInput','intro');
+    setHomeModule(state.selectedModule || 'hair');
+    renderMerchantDetail();
+    renderTodayWriteoffs();
+    syncSuccess();
+    syncFeedbackForm();
   </script>
 </body>
-
 </html>
+
