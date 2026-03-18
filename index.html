@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>社区生活权益入口｜全域全景</title>
+  <title>社区生活权益入口｜权益全景</title>
   <!--
     该文件融合了 v26 的高端视觉与 v24 功能的需求：
     1. 首页完全沿用 v26 的视觉和文案（立足专属资格、落实真实补贴，信任壁垒等）。
@@ -313,7 +313,7 @@
   <!-- 反馈页面 -->
   <div id="view-feedback" class="view">
     <div class="glass-card" style="border-left: 4px solid var(--gold);">
-      <h2>监督反馈</h2>
+      <h2>用户反馈</h2>
       <p class="text-sm">消费结束后，用户需要把到店、价格、态度等反馈回来。</p>
     </div>
     <div class="glass-card">
@@ -326,7 +326,7 @@
     </div>
     <div class="glass-card">
       <div class="row" style="align-items: flex-start; margin-top: 0;">
-        <label class="text-sm">监督选项</label>
+        <label class="text-sm">反馈选项</label>
       </div>
       <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
         <label style="display: flex; gap: 6px; align-items: flex-start;"><input type="checkbox" class="fbCheck" data-text="到店顺利，无额外阻碍"><span class="small">到店顺利</span></label>
@@ -338,11 +338,11 @@
       <div class="row" style="margin-top: 8px;"><span class="small">当前得分</span><span class="din-text" id="fbScore">0 / 4</span></div>
     </div>
     <div class="glass-card">
-      <p class="text-sm" id="fbTemplate">等待勾选监督项后生成反馈文案。</p>
+      <p class="text-sm" id="fbTemplate">等待勾选反馈项后生成反馈文案。</p>
     </div>
     <div class="glass-card" style="display: flex; gap: 12px;">
       <button class="btn btn-outline" style="flex: 1;" onclick="copyFeedback()">复制反馈文案</button>
-      <button class="btn btn-gold" style="flex: 1;" onclick="submitFeedback()">提交监督反馈</button>
+      <button class="btn btn-gold" style="flex: 1;" onclick="submitFeedback()">提交反馈</button>
     </div>
   </div>
 
@@ -351,7 +351,7 @@
     <div class="glass-card" style="text-align: center;">
       <div style="font-size: 48px; color: var(--gold); margin-bottom: 16px;">✓</div>
       <h2 style="font-size: 20px; color: var(--gold); margin: 0;">核销成功</h2>
-      <p class="text-sm" id="successDesc" style="margin-top: 8px;">核销完成后，别忘了提交监督反馈。</p>
+      <p class="text-sm" id="successDesc" style="margin-top: 8px;">核销完成后，别忘了提交用户反馈。</p>
     </div>
     <div class="glass-card">
       <div class="row"><span>门店</span><span class="din-text" id="successMerchant">--</span></div>
@@ -362,19 +362,19 @@
     </div>
     <div class="glass-card" style="display: flex; gap: 12px;">
       <button class="btn btn-outline" style="flex: 1;" onclick="switchTab('home', document.querySelectorAll('.tab')[0])">返回首页</button>
-      <button class="btn btn-gold" style="flex: 1;" onclick="switchTab('feedback', document.querySelectorAll('.tab')[5])">去监督反馈</button>
+      <button class="btn btn-gold" style="flex: 1;" onclick="switchTab('feedback', document.querySelectorAll('.tab')[3])">去用户反馈</button>
     </div>
   </div>
 
   <!-- 首页：身份激活 -->
   <div id="view-home" class="view active">
     <div class="glass-card" style="text-align: center; padding: 30px 20px;">
-      <h1>立足专属资格<br>落实真实补贴</h1>
-      <p class="text-sm">这不是一张折扣券，而是为您开启高品质社区生活生态的实体凭证。系统已开放首批 200 名试运营资格。</p>
+      <h1>社区生活权益卡<br>你的绿色生活通行证</h1>
+      <p class="text-sm">这不仅是一张优惠卡，更是连接社区生活的数字入口。首批试运营资格限时开放，欢迎体验真实补贴。</p>
       <div style="margin: 24px 0;">
-        <span class="badge">信任壁垒</span>
-        <span class="badge">米面油直供</span>
-        <span class="badge">服务监督</span>
+        <span class="badge">首购补贴</span>
+        <span class="badge">多类服务</span>
+        <span class="badge">用户监督</span>
       </div>
     </div>
     <div class="glass-card">
@@ -415,59 +415,30 @@
     </div>
   </div>
 
-  <!-- 全域全景：更多模块 -->
-  <div id="view-overview" class="view">
+  <!-- 权益全景：各大服务分类 -->
+  <div id="view-categories" class="view">
     <div class="glass-card" style="border-left: 4px solid var(--gold);">
-      <h2>全域全景：社区生态</h2>
-      <span class="badge">核心节点</span>
-      <p class="text-sm" style="margin-top: 8px;">请选择您感兴趣的场景，系统将为您提供对应的服务信息和补贴。</p>
+      <h2>权益全景</h2>
+      <p class="text-sm" style="margin-top: 8px;">这是社区生活入口的全景地图，选择大类解锁对应服务与补贴。</p>
     </div>
-    <!-- 模块网格：可按需添加更多模块 -->
-    <div class="module-grid" id="overviewGrid">
-      <!-- 模块示例 -->
-      <div class="module-card">
-        <h3>理发</h3>
-        <p>精选理发店，直接抵扣补贴。体验优先，反馈决定推荐。</p>
-      </div>
-      <div class="module-card">
-        <h3>洗衣</h3>
-        <p>替换修护模块为洗衣，衣物洗护即将上线。</p>
-      </div>
-      <div class="module-card">
-        <h3>维修</h3>
-        <p>家电电脑维修，收费透明；补贴先行。</p>
-      </div>
-      <div class="module-card">
-        <h3>家电</h3>
-        <p>小家电保养清洁，检测补贴最高20元。</p>
-      </div>
-      <div class="module-card">
-        <h3>洗车</h3>
-        <p>精洗打蜡，直抵优惠，快捷体验。</p>
-      </div>
-      <div class="module-card">
-        <h3>餐饮</h3>
-        <p>社区餐饮试吃，消费回补贴。</p>
-      </div>
-      <div class="module-card">
-        <h3>酒店餐饮</h3>
-        <p>高品质酒店与餐厅合作，体验敬请期待。</p>
-      </div>
-      <div class="module-card">
-        <h3>家政维修</h3>
-        <p>家政服务与家居维修，场景拓展中。</p>
-      </div>
+    <div class="module-grid" id="categoriesGrid"></div>
+  </div>
+
+  <!-- 分类详情页：根据所选分类展示首购补贴或商户列表 -->
+  <div id="view-category" class="view">
+    <div class="glass-card" style="border-left: 4px solid var(--gold);">
+      <h2 id="categoryTitle">分类标题</h2>
+      <p class="text-sm" id="categoryDesc">分类说明</p>
     </div>
+    <div id="categoryContent"></div>
   </div>
 
   <!-- 底部导航栏 -->
   <div class="tabbar">
-    <button class="tab active" onclick="switchTab('home', this)">身份激活</button>
+    <button class="tab active" onclick="switchTab('home', this)">首页</button>
     <button class="tab" onclick="switchTab('photo', this)">照片补贴</button>
-    <button class="tab" onclick="switchTab('overview', this)">全域全景</button>
-    <button class="tab" onclick="switchTab('merchants', this)">商户</button>
-    <button class="tab" onclick="switchTab('verify', this)">核销</button>
-    <button class="tab" onclick="switchTab('feedback', this)">反馈</button>
+    <button class="tab" onclick="switchTab('categories', this)">权益全景</button>
+    <button class="tab" onclick="switchTab('feedback', this)">用户反馈</button>
   </div>
 </div>
 
@@ -532,6 +503,10 @@
     // 切换到成功页时保证内容最新
     if (viewId === 'success') {
       syncSuccess();
+    }
+    // 切换到权益全景页时渲染分类列表
+    if (viewId === 'categories') {
+      renderCategories();
     }
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
@@ -605,8 +580,9 @@
 </script>
   <!-- 新功能脚本：商户列表、详情、核销、反馈 -->
   <script>
-    // 扩展全局状态对象，新增选中的商户、核销记录、反馈记录
+    // 扩展全局状态对象，新增选中的商户、分类、核销记录、反馈记录
     state.selectedMerchant = null;
+    state.selectedCategory = null;
     state.writeoffs = [];
     state.feedbacks = [];
 
@@ -635,6 +611,8 @@
         hero: {background: "linear-gradient(180deg, #261D17 0%, #0F1115 100%)"},
         mapUrl: "#",
         images: ["cdb68e1b-64df-405d-94ab-d6e42fd291e1.png"]
+      ,
+        category: "service"
       },
       laundry: {
         name: "洁净洗衣房",
@@ -656,6 +634,8 @@
         hero: {background: "linear-gradient(180deg, #202631 0%, #0F1115 100%)"},
         mapUrl: "#",
         images: ["18776c93-5522-48fe-a99c-18fa3d9bcfb4.png"]
+      ,
+        category: "home"
       },
       repair: {
         name: "匠心维修铺",
@@ -677,6 +657,8 @@
         hero: {background: "linear-gradient(180deg, #242123 0%, #0F1115 100%)"},
         mapUrl: "#",
         images: ["592d0036-08c9-41e9-8faf-f97937a18aef.png"]
+      ,
+        category: "service"
       },
       car: {
         name: "极光洗车站",
@@ -698,6 +680,8 @@
         hero: {background: "linear-gradient(180deg, #1A1F2B 0%, #0F1115 100%)"},
         mapUrl: "#",
         images: ["1e993036-5144-4452-a998-923dd58befdd.png"]
+      ,
+        category: "travel"
       },
       food: {
         name: "邻里餐厅",
@@ -719,8 +703,491 @@
         hero: {background: "linear-gradient(180deg, #2A1C1A 0%, #0F1115 100%)"},
         mapUrl: "#",
         images: ["50469eca-84aa-4fba-a341-459a3b4d0ba9.png"]
+      ,
+        category: "dining"
+      },
+      home2: {
+        name: "小明家政",
+        distance: "400m",
+        phone: "138-1234-5678",
+        address: "社区南区 3 栋 1 楼",
+        hours: "8:00 - 20:00",
+        tags: ["家政", "保洁", "家务助理"],
+        hint: "凭社区通行证享首小时半价。",
+        rules: [
+          "服务人员经过严格背景审查",
+          "使用环保清洁剂",
+          "如不满意可免费返工"
+        ],
+        services: [
+          {name: "家务清洁", price: 60, discount: 20},
+          {name: "深度保洁", price: 120, discount: 30}
+        ],
+        hero: {background: "linear-gradient(180deg, #253A2F 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["27fa9456-36d0-462e-8565-1227387d2290.png"],
+        category: "home"
+      },
+      home3: {
+        name: "阳光保洁",
+        distance: "550m",
+        phone: "139-2222-3333",
+        address: "社区东区 5 栋 商铺1",
+        hours: "9:00 - 21:00",
+        tags: ["保洁", "月嫂", "家庭护理"],
+        hint: "凭社区通行证享上门费减免。",
+        rules: [
+          "专业团队上门服务",
+          "预约后48小时内响应",
+          "用户评分低于3星将暂停合作"
+        ],
+        services: [
+          {name: "日常保洁", price: 80, discount: 20},
+          {name: "月嫂服务", price: 300, discount: 50}
+        ],
+        hero: {background: "linear-gradient(180deg, #2B3D31 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["bcfeb544-1c91-4767-89ca-5d7d8b213109.png"],
+        category: "home"
+      },
+      home4: {
+        name: "家事宝保姆服务",
+        distance: "700m",
+        phone: "138-5555-6666",
+        address: "社区西门 2 栋 102",
+        hours: "8:00 - 18:00",
+        tags: ["家政", "保姆", "钟点工"],
+        hint: "凭社区通行证赠送试工1小时。",
+        rules: [
+          "精选阿姨均持健康证",
+          "提前预约可指定阿姨",
+          "不满意随时更换"
+        ],
+        services: [
+          {name: "钟点工", price: 50, discount: 10},
+          {name: "全日制保姆", price: 200, discount: 40}
+        ],
+        hero: {background: "linear-gradient(180deg, #33443A 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["27fa9456-36d0-462e-8565-1227387d2290.png"],
+        category: "home"
+      },
+      home5: {
+        name: "安心家政",
+        distance: "1.2km",
+        phone: "136-7777-8888",
+        address: "社区北街 10 号",
+        hours: "9:00 - 19:00",
+        tags: ["保洁", "育儿嫂", "家庭服务"],
+        hint: "凭社区通行证享折扣券包。",
+        rules: [
+          "服务人员培训合格",
+          "提供保险保障",
+          "投诉必回访"
+        ],
+        services: [
+          {name: "常规保洁", price: 70, discount: 15},
+          {name: "育儿嫂照看", price: 250, discount: 50}
+        ],
+        hero: {background: "linear-gradient(180deg, #20382F 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["bcfeb544-1c91-4767-89ca-5d7d8b213109.png"],
+        category: "home"
+      },
+      dining2: {
+        name: "小林餐馆",
+        distance: "300m",
+        phone: "137-4444-5555",
+        address: "社区东门 B1 层",
+        hours: "10:00 - 21:00",
+        tags: ["餐馆", "家常菜", "聚餐"],
+        hint: "凭社区通行证享菜品9折。",
+        rules: [
+          "菜品现做，严控用油",
+          "拒绝预制餐",
+          "不满意可退换"
+        ],
+        services: [
+          {name: "家常三菜套餐", price: 45, discount: 10},
+          {name: "特色烤鸭", price: 128, discount: 20}
+        ],
+        hero: {background: "linear-gradient(180deg, #2F1F1B 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["50469eca-84aa-4fba-a341-459a3b4d0ba9.png"],
+        category: "dining"
+      },
+      dining3: {
+        name: "雅致西餐厅",
+        distance: "900m",
+        phone: "139-8888-9999",
+        address: "社区北区 6 号楼顶层",
+        hours: "11:00 - 23:00",
+        tags: ["西餐", "休闲", "下午茶"],
+        hint: "凭社区通行证送甜品。",
+        rules: [
+          "现烤面包出炉",
+          "不添加香精色素",
+          "用餐后可评价享积分"
+        ],
+        services: [
+          {name: "牛排套餐", price: 168, discount: 30},
+          {name: "英式下午茶", price: 98, discount: 20}
+        ],
+        hero: {background: "linear-gradient(180deg, #3E2723 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["50469eca-84aa-4fba-a341-459a3b4d0ba9.png"],
+        category: "dining"
+      },
+      dining4: {
+        name: "御品酒楼",
+        distance: "1km",
+        phone: "138-3333-4444",
+        address: "社区西大街 15 号",
+        hours: "10:00 - 22:00",
+        tags: ["酒楼", "宴席", "私房菜"],
+        hint: "凭社区通行证可免包间费。",
+        rules: [
+          "菜品明码标价",
+          "私人定制宴席",
+          "不满意可退订"
+        ],
+        services: [
+          {name: "午宴套餐", price: 198, discount: 40},
+          {name: "私房宴席", price: 388, discount: 60}
+        ],
+        hero: {background: "linear-gradient(180deg, #4A2B20 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["50469eca-84aa-4fba-a341-459a3b4d0ba9.png"],
+        category: "dining"
+      },
+      dining5: {
+        name: "幸福面馆",
+        distance: "400m",
+        phone: "137-6666-7777",
+        address: "社区南街 8 号",
+        hours: "9:30 - 20:30",
+        tags: ["面馆", "快餐", "简餐"],
+        hint: "凭社区通行证送小菜。",
+        rules: [
+          "每日手擀面",
+          "汤底免费续",
+          "差评率高下架"
+        ],
+        services: [
+          {name: "牛肉面", price: 28, discount: 5},
+          {name: "混沌面", price: 22, discount: 4}
+        ],
+        hero: {background: "linear-gradient(180deg, #331C1A 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["50469eca-84aa-4fba-a341-459a3b4d0ba9.png"],
+        category: "dining"
+      },
+      beauty2: {
+        name: "美丽造型屋",
+        distance: "250m",
+        phone: "139-5555-6666",
+        address: "社区中心 2 层",
+        hours: "9:00 - 20:00",
+        tags: ["美发", "造型", "染烫"],
+        hint: "凭社区通行证享免护理。",
+        rules: [
+          "资深造型师坐镇",
+          "无隐形消费",
+          "用户不满意可重做"
+        ],
+        services: [
+          {name: "剪发造型", price: 60, discount: 15},
+          {name: "染烫套餐", price: 220, discount: 40}
+        ],
+        hero: {background: "linear-gradient(180deg, #301C25 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["cdb68e1b-64df-405d-94ab-d6e42fd291e1.png"],
+        category: "service"
+      },
+      service4: {
+        name: "家电快修中心",
+        distance: "600m",
+        phone: "136-8888-1111",
+        address: "社区东门 1 楼",
+        hours: "9:00 - 18:00",
+        tags: ["家电", "维修", "上门"],
+        hint: "凭社区通行证免检测费。",
+        rules: [
+          "原装配件维修",
+          "明码标价",
+          "修不好不收费"
+        ],
+        services: [
+          {name: "空调维修", price: 120, discount: 30},
+          {name: "热水器维修", price: 150, discount: 35}
+        ],
+        hero: {background: "linear-gradient(180deg, #222E38 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["592d0036-08c9-41e9-8faf-f97937a18aef.png"],
+        category: "service"
+      },
+      service5: {
+        name: "快递驿站",
+        distance: "150m",
+        phone: "135-2222-3333",
+        address: "社区北门旁",
+        hours: "8:00 - 21:00",
+        tags: ["快递", "代收", "寄件"],
+        hint: "凭社区通行证享寄件折扣。",
+        rules: [
+          "代收保管7天",
+          "寄件提供包装",
+          "身份证信息安全保密"
+        ],
+        services: [
+          {name: "快递代收", price: 0, discount: 0},
+          {name: "快递寄件", price: 10, discount: 2}
+        ],
+        hero: {background: "linear-gradient(180deg, #202C2D 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["592d0036-08c9-41e9-8faf-f97937a18aef.png"],
+        category: "service"
+      },
+      travel2: {
+        name: "绿色车行",
+        distance: "500m",
+        phone: "138-9999-0000",
+        address: "社区西区停车场",
+        hours: "9:00 - 22:00",
+        tags: ["电动车", "租赁", "共享"],
+        hint: "凭社区通行证租车半价。",
+        rules: [
+          "车况良好随时更换",
+          "押金即时退还",
+          "驾驶资质验核"
+        ],
+        services: [
+          {name: "电动车租赁", price: 30, discount: 15},
+          {name: "共享滑板车", price: 20, discount: 5}
+        ],
+        hero: {background: "linear-gradient(180deg, #1A2C23 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["1e993036-5144-4452-a998-923dd58befdd.png"],
+        category: "travel"
+      },
+      travel3: {
+        name: "共享单车服务站",
+        distance: "250m",
+        phone: "139-4444-1111",
+        address: "社区南广场",
+        hours: "24小时",
+        tags: ["共享单车", "骑行", "扫车"],
+        hint: "凭社区通行证首30分钟免费。",
+        rules: [
+          "按需调度车辆",
+          "定期保养检查",
+          "乱停罚款申诉通道"
+        ],
+        services: [
+          {name: "共享单车", price: 5, discount: 5},
+          {name: "共享助力车", price: 8, discount: 8}
+        ],
+        hero: {background: "linear-gradient(180deg, #122C34 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["1e993036-5144-4452-a998-923dd58befdd.png"],
+        category: "travel"
+      },
+      travel4: {
+        name: "便民公交卡中心",
+        distance: "700m",
+        phone: "137-3333-5555",
+        address: "社区服务大厅",
+        hours: "8:30 - 17:30",
+        tags: ["公交卡", "充值", "办理"],
+        hint: "凭社区通行证充值优惠。",
+        rules: [
+          "充值即时到账",
+          "IC卡免费更换",
+          "补办享折扣"
+        ],
+        services: [
+          {name: "公交卡充值", price: 100, discount: 5},
+          {name: "新卡办理", price: 20, discount: 5}
+        ],
+        hero: {background: "linear-gradient(180deg, #173039 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["1e993036-5144-4452-a998-923dd58befdd.png"],
+        category: "travel"
+      },
+      travel5: {
+        name: "安心驾校",
+        distance: "1.5km",
+        phone: "136-4444-7777",
+        address: "社区西南外 2 公里",
+        hours: "8:00 - 18:00",
+        tags: ["驾校", "学车", "驾考"],
+        hint: "凭社区通行证报名享免教材费。",
+        rules: [
+          "通过率高教练负责",
+          "透明收费",
+          "学员保险保障"
+        ],
+        services: [
+          {name: "C1驾驶培训", price: 4500, discount: 500},
+          {name: "科目二陪练", price: 300, discount: 50}
+        ],
+        hero: {background: "linear-gradient(180deg, #143A2A 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["1e993036-5144-4452-a998-923dd58befdd.png"],
+        category: "travel"
+      },
+      culture1: {
+        name: "社区书店",
+        distance: "200m",
+        phone: "138-3333-6666",
+        address: "社区文体中心一层",
+        hours: "9:00 - 21:00",
+        tags: ["书店", "阅读", "文创"],
+        hint: "凭社区通行证享图书9折。",
+        rules: [
+          "正版书籍售卖",
+          "会员可免费借阅",
+          "不满意可退换"
+        ],
+        services: [
+          {name: "图书购买", price: 50, discount: 5},
+          {name: "文创用品", price: 30, discount: 3}
+        ],
+        hero: {background: "linear-gradient(180deg, #281E34 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["cc147d6d-c2f3-42b6-841e-fa83a4c213b7.png"],
+        category: "culture"
+      },
+      culture2: {
+        name: "悦动健身中心",
+        distance: "400m",
+        phone: "136-2222-8888",
+        address: "社区运动馆 2 层",
+        hours: "6:00 - 23:00",
+        tags: ["健身", "瑜伽", "团课"],
+        hint: "凭社区通行证享新人体验课。",
+        rules: [
+          "专业教练团队",
+          "课程多样化",
+          "提前预约可退费"
+        ],
+        services: [
+          {name: "健身月卡", price: 199, discount: 30},
+          {name: "瑜伽私教课", price: 150, discount: 20}
+        ],
+        hero: {background: "linear-gradient(180deg, #22233E 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["cc147d6d-c2f3-42b6-841e-fa83a4c213b7.png"],
+        category: "culture"
+      },
+      culture3: {
+        name: "悠然KTV",
+        distance: "800m",
+        phone: "137-0000-1111",
+        address: "社区西区娱乐楼 3 层",
+        hours: "10:00 - 2:00",
+        tags: ["KTV", "娱乐", "聚会"],
+        hint: "凭社区通行证免开包费。",
+        rules: [
+          "酒水明码标价",
+          "实时评分监督",
+          "禁带外食"
+        ],
+        services: [
+          {name: "标准包厢", price: 100, discount: 20},
+          {name: "VIP包厢", price: 200, discount: 40}
+        ],
+        hero: {background: "linear-gradient(180deg, #302240 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["cc147d6d-c2f3-42b6-841e-fa83a4c213b7.png"],
+        category: "culture"
+      },
+      culture4: {
+        name: "欢乐影城",
+        distance: "900m",
+        phone: "139-5555-8888",
+        address: "社区商业街 12 号",
+        hours: "10:00 - 24:00",
+        tags: ["影院", "电影", "IMAX"],
+        hint: "凭社区通行证享票价8折。",
+        rules: [
+          "全新影厅",
+          "支持提前选座",
+          "观影中禁止喧哗"
+        ],
+        services: [
+          {name: "电影票", price: 50, discount: 10},
+          {name: "IMAX票", price: 80, discount: 15}
+        ],
+        hero: {background: "linear-gradient(180deg, #3A263F 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["cc147d6d-c2f3-42b6-841e-fa83a4c213b7.png"],
+        category: "culture"
+      },
+      culture5: {
+        name: "儿童乐园",
+        distance: "1.2km",
+        phone: "138-1111-9999",
+        address: "社区北区 公园内",
+        hours: "9:00 - 20:00",
+        tags: ["游乐园", "亲子", "儿童"],
+        hint: "凭社区通行证享免入园费。",
+        rules: [
+          "设施安全保障",
+          "儿童看护严格",
+          "设备定期检修"
+        ],
+        services: [
+          {name: "日间入园", price: 80, discount: 20},
+          {name: "亲子年卡", price: 500, discount: 100}
+        ],
+        hero: {background: "linear-gradient(180deg, #2D2947 0%, #0F1115 100%)"},
+        mapUrl: "#",
+        images: ["cc147d6d-c2f3-42b6-841e-fa83a4c213b7.png"],
+        category: "culture"
       }
     };
+
+    // 定义权益全景分类，每个分类关联一个或多个商户ID；首购补贴无需商户列表
+    const categories = [
+      // 优先展示首购补贴，其次为家政、酒店餐饮、便民服务、绿色出行、文化娱乐
+      {
+        id: 'first',
+        name: '首购补贴',
+        desc: '家庭补给首单立减，专属新人礼包',
+        merchants: []
+      },
+      {
+        id: 'home',
+        name: '家政服务',
+        desc: '家政保洁、衣物洗护等暖心服务',
+        merchants: ['laundry','home2','home3','home4','home5']
+      },
+      {
+        id: 'dining',
+        name: '酒店餐饮',
+        desc: '周边餐厅与酒店试吃体验',
+        merchants: ['food','dining2','dining3','dining4','dining5']
+      },
+      {
+        id: 'service',
+        name: '便民服务',
+        desc: '美发美容、家电维修等便民项目',
+        merchants: ['hair','beauty2','repair','service4','service5']
+      },
+      {
+        id: 'travel',
+        name: '绿色出行',
+        desc: '洗车养车、电动车共享等出行福利',
+        merchants: ['car','travel2','travel3','travel4','travel5']
+      },
+      {
+        id: 'culture',
+        name: '文化娱乐',
+        desc: '图书健身、休闲娱乐等放松空间',
+        merchants: ['culture1','culture2','culture3','culture4','culture5']
+      }
+    ];
 
     // 样例用户库，用于核销手机号验证
     const users = {
@@ -754,11 +1221,89 @@
         card.onclick = () => {
           state.selectedMerchant = id;
           renderMerchantDetail();
-          // 高亮商户标签并跳转详情页
-          switchTab('merchant-detail', document.querySelectorAll('.tab')[3]);
+          // 跳转至商户详情视图，不高亮底部导航
+          switchTab('merchant-detail');
         };
         wrapper.appendChild(card);
       });
+    }
+
+    // 渲染权益全景分类卡片
+    function renderCategories() {
+      const grid = document.getElementById('categoriesGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      categories.forEach(cat => {
+        const card = document.createElement('div');
+        card.className = 'module-card';
+        card.innerHTML = `<h3>${cat.name}</h3><p>${cat.desc}</p>`;
+        card.onclick = () => {
+          openCategory(cat.id);
+        };
+        grid.appendChild(card);
+      });
+    }
+
+    // 打开某个分类
+    function openCategory(id) {
+      state.selectedCategory = id;
+      const cat = categories.find(c => c.id === id);
+      if (!cat) return;
+      // 更新标题与描述
+      const titleEl = document.getElementById('categoryTitle');
+      const descEl = document.getElementById('categoryDesc');
+      if (titleEl) titleEl.innerText = cat.name;
+      if (descEl) descEl.innerText = cat.desc;
+      const content = document.getElementById('categoryContent');
+      if (!content) return;
+      content.innerHTML = '';
+      if (cat.id === 'first') {
+        // 首购补贴页面
+        const card = document.createElement('div');
+        card.className = 'glass-card';
+        card.innerHTML = `
+          <h3 style="font-size: 18px; color: var(--gold); margin-top: 0;">首购补贴申请</h3>
+          <p class="text-sm" style="margin-top: 8px;">首次购物可享受专属优惠，抵扣家庭补给费用。点击下方按钮跳转申请。</p>
+          <button class="btn btn-gold" style="margin-top: 16px;" onclick="openFirstForm()">前往首购补贴</button>
+        `;
+        content.appendChild(card);
+      } else {
+        // 商户列表页面
+        if (cat.merchants.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'glass-card';
+          empty.innerHTML = '<p class="text-sm">敬请期待，正在洽谈合作商户。</p>';
+          content.appendChild(empty);
+        } else {
+          cat.merchants.forEach(mid => {
+            const m = merchants[mid];
+            if (!m) return;
+            const card = document.createElement('div');
+            card.className = 'merchant-card glass-card';
+            card.innerHTML = `
+              <div class="merchant-thumb" style="background-image: url('${m.images[0]}'), var(--surface);"></div>
+              <div>
+                <div style="font-size: 16px; font-weight: 600; color: var(--gold);">${m.name}</div>
+                <div class="text-sm">${m.distance}｜${m.tags.join('·')}</div>
+                <div class="text-sm" style="margin-top: 4px; color: var(--text-muted);">${m.hint}</div>
+              </div>
+            `;
+            card.onclick = () => {
+              state.selectedMerchant = mid;
+              renderMerchantDetail();
+              switchTab('merchant-detail');
+            };
+            content.appendChild(card);
+          });
+        }
+      }
+      // 切换到分类详情页
+      switchTab('category');
+    }
+
+    // 首购补贴入口
+    function openFirstForm() {
+      alert('首购补贴功能即将上线，敬请期待！');
     }
 
     // 渲染商户详情页
@@ -832,7 +1377,8 @@
         select.value = state.selectedMerchant || '';
         if (select.onchange) select.onchange();
       }
-      document.querySelectorAll('.tab')[4].click();
+      // 切换到核销视图，不高亮底部导航
+      switchTab('verify');
     }
 
     // 核验预览
@@ -929,7 +1475,7 @@
       document.querySelectorAll('.fbCheck').forEach(cb => cb.checked = false);
       document.getElementById('fbComment').value = '';
       document.getElementById('fbScore').innerText = '0 / 4';
-      document.getElementById('fbTemplate').innerText = '等待勾选监督项后生成反馈文案。';
+      document.getElementById('fbTemplate').innerText = '等待勾选反馈项后生成反馈文案。';
     }
 
     // 生成反馈文案
@@ -946,13 +1492,13 @@
       if (comment) {
         content += (content ? ' ' : '') + comment;
       }
-      document.getElementById('fbTemplate').innerText = content || '等待勾选监督项后生成反馈文案。';
+      document.getElementById('fbTemplate').innerText = content || '等待勾选反馈项后生成反馈文案。';
     }
 
     // 复制反馈文案
     function copyFeedback() {
       const text = document.getElementById('fbTemplate').innerText;
-      if (!text || text === '等待勾选监督项后生成反馈文案。') {
+      if (!text || text === '等待勾选反馈项后生成反馈文案。') {
         alert('请先勾选选项并填写内容。');
         return;
       }
@@ -964,7 +1510,7 @@
     // 提交反馈
     function submitFeedback() {
       const text = document.getElementById('fbTemplate').innerText;
-      if (!text || text === '等待勾选监督项后生成反馈文案。') {
+      if (!text || text === '等待勾选反馈项后生成反馈文案。') {
         alert('请先填写反馈信息。');
         return;
       }
@@ -975,8 +1521,9 @@
         pay: document.getElementById('fbPay').value,
         text
       });
-      alert('感谢您的监督反馈，我们已记录。');
-      document.querySelectorAll('.tab')[3].click();
+      alert('感谢您的反馈，我们已记录。');
+      // 返回反馈页，并高亮反馈标签
+      switchTab('feedback', document.querySelectorAll('.tab')[3]);
     }
 
     // 进入商户照片页面
@@ -984,8 +1531,8 @@
       // 确保有选中门店
       if (!state.selectedMerchant) return;
       renderMerchantPhotos();
-      // 高亮商户标签并跳转照片页
-      switchTab('merchant-photos', document.querySelectorAll('.tab')[3]);
+      // 跳转至照片展示页，不高亮底部导航
+      switchTab('merchant-photos');
     }
 
     // 渲染商户照片页面
@@ -1046,6 +1593,8 @@
       renderMerchantList();
       renderVerifyPanel();
       renderVerifyRecords();
+      // 初始化权益全景分类
+      renderCategories();
       document.querySelectorAll('.fbCheck').forEach(cb => {
         cb.onchange = updateFeedbackTemplate;
       });
