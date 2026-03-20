@@ -34,6 +34,8 @@
       --font-num: 'DIN Alternate', 'Inter', system-ui, sans-serif;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    /* 防止移动端左右晃动，禁止横向滚动 */
+    html, body { overflow-x: hidden; }
     body {
       margin: 0;
       background: var(--bg-gradient);
@@ -77,20 +79,22 @@
     .version { font-size: 13px; color: var(--text-muted); }
 
     /* 栏目标题 */
-    h1 { font-size: 24px; font-weight: 500; margin: 0 0 12px 0; line-height: 1.4; color: var(--gold); }
-    h2 { font-size: 18px; font-weight: 500; margin: 0 0 8px 0; color: var(--gold); }
-    .text-sm { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    h1 { font-size: 28px; font-weight: 500; margin: 0 0 14px 0; line-height: 1.4; color: var(--gold); }
+    h2 { font-size: 20px; font-weight: 500; margin: 0 0 10px 0; color: var(--gold); }
+    /* 调整文字大小，提升阅读体验 */
+    /* 调整说明文字字号回退一号，改善视觉层次 */
+    .text-sm { font-size: 16px; color: var(--text-muted); line-height: 1.7; }
 
     /* 徽章样式 */
     .badge {
       display: inline-block;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
       font-weight: 500;
       border: 0.5px solid var(--gold-muted);
       color: var(--gold);
-      background: rgba(227, 197, 142, 0.05);
+      background: rgba(227, 197, 142, 0.06);
       margin-right: 8px;
       margin-bottom: 8px;
     }
@@ -98,24 +102,41 @@
     /* 输入框 */
     .input-field {
       width: 100%;
-      background: rgba(0, 0, 0, 0.2);
+      /* 使用更高的不透明度提升可读性，适配暗色背景 */
+      background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border-light);
       border-radius: 10px;
-      padding: 14px;
+      padding: 16px;
       color: var(--text-main);
-      font-size: 15px;
+      /* 调整字体回退一号，整体更协调 */
+      font-size: 16px;
       margin-top: 8px;
       outline: none;
     }
     .input-field:focus { border-color: var(--gold); }
+    /* 优化 select 下拉的可读性：调整背景及选项颜色 */
+    select.input-field {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+    select.input-field option {
+      background-color: #1a1d24;
+      color: var(--text-main);
+    }
+    select.input-field option:disabled {
+      color: var(--text-muted);
+    }
 
     /* 按钮样式 */
     .btn {
       width: 100%;
       border: none;
       border-radius: 12px;
-      height: 48px;
-      font-size: 16px;
+      height: 52px;
+      font-size: 18px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -139,8 +160,9 @@
     .tabbar {
       position: fixed;
       bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
+      right: 0;
+      margin: 0 auto;
       width: 100%;
       max-width: 480px;
       background: rgba(15, 17, 21, 0.9);
@@ -154,16 +176,23 @@
     .tab {
       flex: 1;
       text-align: center;
-      padding: 16px 0;
+      margin: 0 4px;
+      padding: 14px 0;
+      font-size: 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(227, 197, 142, 0.15);
+      background: rgba(255, 255, 255, 0.06);
       color: var(--text-muted);
-      font-size: 14px;
-      border: none;
-      background: transparent;
-      transition: 0.3s;
+      box-shadow: inset 0 2px 4px rgba(227, 197, 142, 0.1);
+      transition: background 0.3s, box-shadow 0.3s, color 0.3s, transform 0.1s;
     }
     .tab.active {
       color: var(--gold);
+      background: rgba(227, 197, 142, 0.18);
+      box-shadow: 0 6px 14px rgba(227, 197, 142, 0.3), inset 0 -2px 4px rgba(227, 197, 142, 0.2);
       font-weight: 600;
+      /* 移除垂直位移，避免移动端晃动 */
+      transform: none;
     }
 
     .view { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
@@ -194,13 +223,13 @@
     }
     .module-card h3 {
       margin: 0;
-      font-size: 16px;
+      font-size: 18px;
       color: var(--gold);
       font-weight: 600;
     }
     .module-card p {
       margin: 6px 0 0 0;
-      font-size: 12px;
+      font-size: 14px;
       color: var(--text-muted);
       flex: 1;
     }
@@ -212,7 +241,7 @@
     .row { display: flex; align-items: center; justify-content: space-between; }
     .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
     .chip { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; background: var(--blue-muted); color: var(--blue); }
-    .small { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+    .small { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
     .merchant-card { display: flex; gap: 12px; border-left: 4px solid var(--gold); padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); margin-bottom: 12px; cursor: pointer; }
     .merchant-thumb { width: 80px; height: 80px; border-radius: 12px; background-size: cover; background-position: center; }
   </style>
@@ -317,12 +346,9 @@
       <p class="text-sm">消费结束后，用户需要把到店、价格、态度等反馈回来。</p>
     </div>
     <div class="glass-card">
-      <label class="text-sm">门店</label>
-      <input id="fbMerchant" class="input-field" readonly>
-      <label class="text-sm" style="margin-top: 16px;">消费项目</label>
-      <input id="fbService" class="input-field" readonly>
-      <label class="text-sm" style="margin-top: 16px;">本次支付金额</label>
-      <input id="fbPay" class="input-field" readonly>
+      <div class="row"><span>门店</span><span class="din-text" id="fbMerchant">--</span></div>
+      <div class="row" style="margin-top: 6px;"><span>消费项目</span><span class="din-text" id="fbService">--</span></div>
+      <div class="row" style="margin-top: 6px;"><span>本次支付</span><span class="din-text" id="fbPay">--</span></div>
     </div>
     <div class="glass-card">
       <div class="row" style="align-items: flex-start; margin-top: 0;">
@@ -562,6 +588,12 @@
       scanLine.style.display = "none";
       btn.innerText = "提交系统核验";
       btn.disabled = false;
+      // 校验补贴品类，只有指定分类才可获得补贴
+      const category = document.getElementById('photoCategory').value;
+      if (!["oil", "rice", "wash"].includes(category)) {
+        resultBox.innerHTML = "请选择正确的补贴品类并上传符合要求的照片。";
+        return;
+      }
       // 固定奖励逻辑：每次5元
       const reward = 5;
       state.subsidyBalance += reward;
@@ -588,6 +620,13 @@
 
     // 用于存储用户上传的门店照片列表，键为门店ID，值为数组（图片的 dataURL）
     state.merchantPhotos = {};
+
+    // 默认门店照片，用于展示滚屏效果，如无用户上传则使用这些示例图
+    const defaultGalleryImages = [
+      "cdb68e1b-64df-405d-94ab-d6e42fd291e1.png",
+      "18776c93-5522-48fe-a99c-18fa3d9bcfb4.png",
+      "592d0036-08c9-41e9-8faf-f97937a18aef.png"
+    ];
 
     // 定义商户数据，每个商户包含基础信息、补贴项目、背景和图片
     const merchants = {
@@ -1338,7 +1377,7 @@
         联系电话：${m.phone}<br>
         地址：${m.address}<br>
         营业时间：${m.hours}<br>
-        <a href="${m.mapUrl}" target="_blank" style="color: var(--blue); text-decoration: underline;">查看地图</a>
+        <a href="javascript:void(0)" onclick="openMap()" style="color: var(--blue); text-decoration: underline;">查看门店地图</a>
       `;
       const ruleBox = document.getElementById('detailRules');
       ruleBox.innerHTML = m.rules.map(r => '· ' + r).join('<br>');
@@ -1469,9 +1508,10 @@
     function syncFeedback() {
       const rec = state.writeoffs[0];
       if (!rec) return;
-      document.getElementById('fbMerchant').value = merchants[rec.merchantId].name;
-      document.getElementById('fbService').value = rec.serviceName;
-      document.getElementById('fbPay').value = formatMoney(rec.price - rec.discount);
+      // 在反馈页展示最近核销的信息，使用 innerText 替代输入框，用户无需输入
+      document.getElementById('fbMerchant').innerText = merchants[rec.merchantId].name;
+      document.getElementById('fbService').innerText = rec.serviceName;
+      document.getElementById('fbPay').innerText = formatMoney(rec.price - rec.discount);
       document.querySelectorAll('.fbCheck').forEach(cb => cb.checked = false);
       document.getElementById('fbComment').value = '';
       document.getElementById('fbScore').innerText = '0 / 4';
@@ -1486,7 +1526,9 @@
       document.getElementById('fbScore').innerText = `${score} / 4`;
       let content = '';
       if (texts.length > 0) {
-        content = `到 ${document.getElementById('fbMerchant').value} ${document.getElementById('fbService').value}，${texts.join('，')}。`;
+        const merchantName = document.getElementById('fbMerchant').innerText;
+        const serviceName = document.getElementById('fbService').innerText;
+        content = `到 ${merchantName} ${serviceName}，${texts.join('，')}。`;
       }
       const comment = document.getElementById('fbComment').value.trim();
       if (comment) {
@@ -1516,9 +1558,9 @@
       }
       state.feedbacks.unshift({
         time: new Date(),
-        merchantName: document.getElementById('fbMerchant').value,
-        serviceName: document.getElementById('fbService').value,
-        pay: document.getElementById('fbPay').value,
+        merchantName: document.getElementById('fbMerchant').innerText || '--',
+        serviceName: document.getElementById('fbService').innerText || '--',
+        pay: document.getElementById('fbPay').innerText || '--',
         text
       });
       alert('感谢您的反馈，我们已记录。');
@@ -1547,27 +1589,32 @@
       if (!gallery) return;
       // 获取原始图片列表和用户上传的图片
       const userPhotos = state.merchantPhotos[id] || [];
-      const allPhotos = m.images.concat(userPhotos);
-      // 渲染图片网格
+      // 使用默认示例图填充不足：若图片不足3张，则从默认库补齐，优先展示自带照片
+      const baseImages = (m.images && m.images.length) ? m.images : [];
+      const galleryImages = baseImages.concat(defaultGalleryImages).slice(0, 3);
+      const allPhotos = galleryImages.concat(userPhotos);
+      // 渲染图片列表为横向滚动，固定规格
       gallery.innerHTML = '';
       if (allPhotos.length === 0) {
         gallery.innerHTML = '<p class="text-sm">暂无照片，快来上传吧！</p>';
         return;
       }
-      const grid = document.createElement('div');
-      grid.style.display = 'grid';
-      grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-      grid.style.gap = '12px';
+      const container = document.createElement('div');
+      container.style.display = 'flex';
+      container.style.overflowX = 'auto';
+      container.style.gap = '12px';
+      container.style.paddingBottom = '8px';
       allPhotos.forEach(src => {
         const img = document.createElement('img');
         img.src = src;
-        img.style.width = '100%';
+        img.style.width = '160px';
+        img.style.height = '120px';
         img.style.borderRadius = '8px';
-        img.style.height = '100px';
         img.style.objectFit = 'cover';
-        grid.appendChild(img);
+        img.style.flexShrink = '0';
+        container.appendChild(img);
       });
-      gallery.appendChild(grid);
+      gallery.appendChild(container);
     }
 
     // 处理用户上传门店照片
@@ -1577,15 +1624,33 @@
       const reader = new FileReader();
       reader.onload = function(e) {
         const id = state.selectedMerchant;
-        if (!state.merchantPhotos[id]) {
-          state.merchantPhotos[id] = [];
-        }
-        state.merchantPhotos[id].push(e.target.result);
-        renderMerchantPhotos();
-        // 重置文件输入，使得可以上传相同文件
-        event.target.value = '';
+      if (!state.merchantPhotos[id]) {
+        state.merchantPhotos[id] = [];
+      }
+      // 限制最多上传 3 张用户照片
+      if (state.merchantPhotos[id].length >= 3) {
+        alert('每个门店最多上传 3 张照片，请删除旧照片后再尝试。');
+        return;
+      }
+      state.merchantPhotos[id].push(e.target.result);
+      renderMerchantPhotos();
+      // 重置文件输入，使得可以上传相同文件
+      event.target.value = '';
       };
       reader.readAsDataURL(file);
+    }
+
+    // 打开门店地图，跳转到商户预设的地图链接或提示占位
+    function openMap() {
+      const id = state.selectedMerchant;
+      if (!id) return;
+      const m = merchants[id];
+      // 如果配置了 mapUrl 并且不为 #，则在新窗口打开
+      if (m.mapUrl && m.mapUrl !== '#' && m.mapUrl !== '') {
+        window.open(m.mapUrl, '_blank');
+      } else {
+        alert('地图导航功能即将上线，敬请期待。');
+      }
     }
 
     // 页面加载完成后初始化内容
